@@ -1,0 +1,16 @@
+.uberSudoku .grid {
+    border: solid 5px #444444;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+.uberSudoku .grid tr:nth-of-type(3n) td {
+    border-bottom: solid 2px #888888;
+}
+.uberSudoku .grid tr td:nth-of-type(3n) {
+    border-right: solid 2px #888888;
+}
+.uberSudoku .grid td {
+    border: solid 1px #cccccc;
+    height: 50px;
+    width: 50px;
+}
