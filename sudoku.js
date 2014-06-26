@@ -1,10 +1,12 @@
 $(document).ready(function () {
-    $(".uberSudoku").uberSudoku();
+    $(".sudokuContainer").uberSudoku();
 });
 
 (function ($, undefined) {
     $.fn.uberSudoku = function (options) {
         this.each(function () {
+            $(this).addClass("uberSudoku");
+
             var $grid = $("<table class='grid' />").appendTo(this);
 
             _(9).times(function () {
