@@ -7,5 +7,9 @@ $(document).ready(function () {
                 $cell = $("<td />").appendTo($row);
             });
         });
+
+        $grid.find("td:not(.given)").each(function () {
+            $(this).append("<input type='text' maxlength='1' />");
+        });
     });
 });

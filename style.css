@@ -2,6 +2,7 @@
     border: solid 5px #444444;
     border-collapse: collapse;
     margin: 0 auto;
+    text-align: center;
 }
 .uberSudoku .grid tr:nth-of-type(3n) td {
     border-bottom: solid 2px #888888;
@@ -13,4 +14,9 @@
     border: solid 1px #cccccc;
     height: 50px;
     width: 50px;
+}
+.uberSudoku .grid td input {
+    font-size: 16px;
+    text-align: center;
+    width: 30px;
 }
