@@ -15,6 +15,9 @@
     height: 50px;
     width: 50px;
 }
+.uberSudoku .grid td.invalid, .uberSudoku .grid td.conflict {
+    background: #ffaa88;
+}
 .uberSudoku .grid td input {
     font-size: 16px;
     text-align: center;

@@ -70,6 +70,26 @@ $(document).ready(function () {
             return $(cells).map(function (i, cell) {
                 return $(cell).find("input").val();
             });
+        },
+
+        updateConflicts: function () {
+            $(this.element).find("td").removeClass("conflict");
+            var plugin = this;
+
+            var $scopes = $(this.rows()).add(this.columns()).add(this.boxes());
+            $scopes.each(function (i, scope) {
+                var scopeValues = plugin.getValues(scope),
+                    scopeNumbers = scopeValues.filter(function (j, value) {
+                        return /^\d$/.test(value);
+                    }),
+                    counter = _(scopeNumbers).countBy(),
+                    duplicateNumbers = _(counter).keys().filter(function (number) {
+                        return counter[number] > 1;
+                    });
+                $(scope).filter(function (j, cell) {
+                    return duplicateNumbers.indexOf($(cell).find("input").val()) !== -1;
+                }).addClass("conflict");
+            });
         }
     });
 
@@ -94,6 +114,10 @@ $(document).ready(function () {
 
             $grid.find("td:not(.given)").each(function (i, cell) {
                 $(cell).append("<input type='text' maxlength='1' />");
+            });
+
+            $grid.on("input", "td input", function (event) {
+                plugin.updateConflicts();
             });
         });
     };
