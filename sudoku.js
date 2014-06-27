@@ -47,12 +47,12 @@ $(document).ready(function () {
 
             var $grid = $("<table class='grid' />").appendTo(this);
 
-            _(9).times(function () {
+            for (var i = 0; i < 9; i++) {
                 $row = $("<tr />").appendTo($grid);
-                _(9).times(function () {
+                for (var j = 0; j < 9; j++) {
                     $cell = $("<td />").appendTo($row);
-                });
-            });
+                }
+            }
 
             $grid.find("td:not(.given)").each(function () {
                 $(this).append("<input type='text' maxlength='1' />");
