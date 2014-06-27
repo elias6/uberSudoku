@@ -3,7 +3,7 @@ $(document).ready(function () {
 });
 
 (function ($, undefined) {
-    function Plugin (element) {
+    function Plugin(element) {
         this.element = element;
     }
 
