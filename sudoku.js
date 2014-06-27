@@ -111,6 +111,24 @@ $(document).ready(function () {
                 $(cell).append("<input type='text' maxlength='1' />");
             });
 
+            $grid.on("keypress", "td input", function (event) {
+                var rowIndex = $(this).closest("tr").index(),
+                    columnIndex = $(this).closest("td").index(),
+                    $targetCell;
+                if (event.keyCode === 37 && columnIndex > 0) {  // left
+                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex - 1);
+                } else if (event.keyCode === 38 && rowIndex > 0) {  // up
+                    $targetCell = $grid.find("tr").eq(rowIndex - 1).find("td").eq(columnIndex);
+                } else if (event.keyCode === 39 && columnIndex < 8) {  // right
+                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex + 1);
+                } else if (event.keyCode === 40 && rowIndex < 8) {  // down
+                    $targetCell = $grid.find("tr").eq(rowIndex + 1).find("td").eq(columnIndex);
+                }
+                if ($targetCell) {
+                    $targetCell.find("input").focus().select();
+                }
+            });
+
             $grid.on("input", "td input", function (event) {
                 plugin.updateConflicts();
             });
