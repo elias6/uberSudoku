@@ -3,21 +3,25 @@ $(document).ready(function () {
 });
 
 (function ($, undefined) {
-    $.fn.uberSudoku = function (options) {
-        function getRow(cell) {
+    function Plugin (element) {
+        this.element = element;
+    }
+
+    $.extend(Plugin.prototype, {
+        getRow: function (cell) {
             var $cell = $(cell).closest("td");
             return $cell.closest("tr").find("td");
-        }
+        },
 
-        function getColumn(cell) {
+        getColumn: function (cell) {
             var $cell = $(cell).closest("td"),
                 index = $cell.index();
             return $cell.closest(".grid").find("td").filter(function () {
                 return $(this).index() === index;
             });
-        }
+        },
 
-        function getBox(cell) {
+        getBox: function (cell) {
             var $cell = $(cell).closest("td"),
                 rowIndex = $cell.closest("tr").index(),
                 columnIndex = $cell.index(),
@@ -29,7 +33,9 @@ $(document).ready(function () {
                 return stack.indexOf($(this).index()) !== -1;
             });
         }
+    });
 
+    $.fn.uberSudoku = function (options) {
         this.each(function () {
             $(this).addClass("uberSudoku");
 
