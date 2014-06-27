@@ -64,6 +64,12 @@ $(document).ready(function () {
                 }
             }
             return result;
+        },
+
+        getNumbers: function (cells) {
+            return $(cells).map(function () {
+                return $(this).find("input").val();
+            });
         }
     });
 
