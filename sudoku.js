@@ -8,27 +8,6 @@ $(document).ready(function () {
     }
 
     $.extend(Plugin.prototype, {
-        getRow: function (element) {
-            var $cell = $(element).closest("td");
-            return $(this.rows()).filter(function (i, row) {
-                return row.filter($cell).length > 0;
-            })[0];
-        },
-
-        getColumn: function (element) {
-            var $cell = ($(element).closest("td"));
-            return $(this.columns()).filter(function (i, column) {
-                return column.filter($cell).length > 0;
-            })[0];
-        },
-
-        getBox: function (element) {
-            var $cell = $(element).closest("td");
-            return $(this.boxes()).filter(function (i, box) {
-                return box.filter($cell).length > 0;
-            })[0];
-        },
-
         rows: function () {
             var result = [];
             $(this.element).find("tr").each(function (i, row) {
