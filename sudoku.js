@@ -78,7 +78,7 @@ $(document).ready(function () {
                         return /^\d$/.test(value);
                     }),
                     counter = _(scopeNumbers).countBy(),
-                    duplicateNumbers = _(counter).keys().filter(function (number) {
+                    duplicateNumbers = Object.keys(counter).filter(function (number) {
                         return counter[number] > 1;
                     });
                 $(scope).filter(function (j, cell) {
