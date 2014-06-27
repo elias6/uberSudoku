@@ -32,6 +32,38 @@ $(document).ready(function () {
             }).find("td").filter(function () {
                 return stack.indexOf($(this).index()) !== -1;
             });
+        },
+
+        rows: function () {
+            var result = [];
+            $(this.element).find("tr").each(function () {
+                result.push($(this).find("td"));
+            });
+            return result;
+        },
+
+        columns: function () {
+            var result = [];
+            for (var i = 0; i < 9; i++) {
+                result.push($(this.element).find("td").filter(function () {
+                    return $(this).index() === i;
+                }));
+            }
+            return result;
+        },
+
+        boxes: function () {
+            var result = [];
+            for (var i = 0; i < 3; i++) {
+                var $band = $(this.element).find("tr").slice(3 * i, 3 * (i + 1));
+                for (var j = 0; j < 3; j++) {
+                    result.push($band.find("td").filter(function () {
+                        var index = $(this).index();
+                        return index >= 3 * j && index < 3 * (j + 1);
+                    }));
+                }
+            }
+            return result;
         }
     });
 
