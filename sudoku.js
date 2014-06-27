@@ -16,8 +16,8 @@ $(document).ready(function () {
         getColumn: function (cell) {
             var $cell = $(cell).closest("td"),
                 index = $cell.index();
-            return $cell.closest(".grid").find("td").filter(function () {
-                return $(this).index() === index;
+            return $cell.closest(".grid").find("td").filter(function (i, cell) {
+                return $(cell).index() === index;
             });
         },
 
@@ -27,17 +27,17 @@ $(document).ready(function () {
                 columnIndex = $cell.index(),
                 band = [[0, 1, 2], [3, 4, 5], [6, 7, 8]][Math.floor(rowIndex / 3)],
                 stack = [[0, 1, 2], [3, 4, 5], [6, 7, 8]][Math.floor(columnIndex / 3)];
-            return $cell.closest(".grid").find("tr").filter(function () {
-                return band.indexOf($(this).index()) !== -1;
-            }).find("td").filter(function () {
-                return stack.indexOf($(this).index()) !== -1;
+            return $cell.closest(".grid").find("tr").filter(function (i, row) {
+                return band.indexOf($(row).index()) !== -1;
+            }).find("td").filter(function (i, cell) {
+                return stack.indexOf($(cell).index()) !== -1;
             });
         },
 
         rows: function () {
             var result = [];
-            $(this.element).find("tr").each(function () {
-                result.push($(this).find("td"));
+            $(this.element).find("tr").each(function (i, row) {
+                result.push($(row).find("td"));
             });
             return result;
         },
@@ -45,8 +45,8 @@ $(document).ready(function () {
         columns: function () {
             var result = [];
             for (var i = 0; i < 9; i++) {
-                result.push($(this.element).find("td").filter(function () {
-                    return $(this).index() === i;
+                result.push($(this.element).find("td").filter(function (j, cell) {
+                    return $(cell).index() === i;
                 }));
             }
             return result;
@@ -57,8 +57,8 @@ $(document).ready(function () {
             for (var i = 0; i < 3; i++) {
                 var $band = $(this.element).find("tr").slice(3 * i, 3 * (i + 1));
                 for (var j = 0; j < 3; j++) {
-                    result.push($band.find("td").filter(function () {
-                        var index = $(this).index();
+                    result.push($band.find("td").filter(function (i, cell) {
+                        var index = $(cell).index();
                         return index >= 3 * j && index < 3 * (j + 1);
                     }));
                 }
@@ -67,8 +67,8 @@ $(document).ready(function () {
         },
 
         getValues: function (cells) {
-            return $(cells).map(function () {
-                return $(this).find("input").val();
+            return $(cells).map(function (i, cell) {
+                return $(cell).find("input").val();
             });
         }
     });
@@ -92,8 +92,8 @@ $(document).ready(function () {
                 }
             }
 
-            $grid.find("td:not(.given)").each(function () {
-                $(this).append("<input type='text' maxlength='1' />");
+            $grid.find("td:not(.given)").each(function (i, cell) {
+                $(cell).append("<input type='text' maxlength='1' />");
             });
         });
     };
