@@ -8,30 +8,25 @@ $(document).ready(function () {
     }
 
     $.extend(Plugin.prototype, {
-        getRow: function (cell) {
-            var $cell = $(cell).closest("td");
-            return $cell.closest("tr").find("td");
+        getRow: function (element) {
+            var $cell = $(element).closest("td");
+            return $(this.rows()).filter(function (i, row) {
+                return row.filter($cell).length > 0;
+            })[0];
         },
 
-        getColumn: function (cell) {
-            var $cell = $(cell).closest("td"),
-                index = $cell.index();
-            return $cell.closest(".grid").find("td").filter(function (i, cell) {
-                return $(cell).index() === index;
-            });
+        getColumn: function (element) {
+            var $cell = ($(element).closest("td"));
+            return $(this.columns()).filter(function (i, column) {
+                return column.filter($cell).length > 0;
+            })[0];
         },
 
-        getBox: function (cell) {
-            var $cell = $(cell).closest("td"),
-                rowIndex = $cell.closest("tr").index(),
-                columnIndex = $cell.index(),
-                band = [[0, 1, 2], [3, 4, 5], [6, 7, 8]][Math.floor(rowIndex / 3)],
-                stack = [[0, 1, 2], [3, 4, 5], [6, 7, 8]][Math.floor(columnIndex / 3)];
-            return $cell.closest(".grid").find("tr").filter(function (i, row) {
-                return band.indexOf($(row).index()) !== -1;
-            }).find("td").filter(function (i, cell) {
-                return stack.indexOf($(cell).index()) !== -1;
-            });
+        getBox: function (element) {
+            var $cell = $(element).closest("td");
+            return $(this.boxes()).filter(function (i, box) {
+                return box.filter($cell).length > 0;
+            })[0];
         },
 
         rows: function () {
