@@ -74,7 +74,7 @@ $(document).ready(function () {
     });
 
     $.fn.uberSudoku = function (options) {
-        this.each(function () {
+        return this.each(function () {
             if (! $(this).data("plugin_uberSudoku")) {
                 $(this).data("plugin_uberSudoku", new Plugin(this, options));
             }
@@ -96,7 +96,5 @@ $(document).ready(function () {
                 $(this).append("<input type='text' maxlength='1' />");
             });
         });
-
-        return this;
     };
 })(jQuery);
