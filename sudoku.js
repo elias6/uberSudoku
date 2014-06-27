@@ -37,6 +37,12 @@ $(document).ready(function () {
 
     $.fn.uberSudoku = function (options) {
         this.each(function () {
+            if (! $(this).data("plugin_uberSudoku")) {
+                $(this).data("plugin_uberSudoku", new Plugin(this, options));
+            }
+
+            var plugin = $(this).data("plugin_uberSudoku");
+
             $(this).addClass("uberSudoku");
 
             var $grid = $("<table class='grid' />").appendTo(this);
