@@ -87,9 +87,9 @@ $(document).ready(function () {
             var $grid = $("<table class='grid' />").appendTo(this);
 
             for (var i = 0; i < 9; i++) {
-                $row = $("<tr />").appendTo($grid);
+                var $row = $("<tr />").appendTo($grid);
                 for (var j = 0; j < 9; j++) {
-                    $cell = $("<td />").appendTo($row);
+                    var $cell = $("<td />").appendTo($row);
                 }
             }
 
