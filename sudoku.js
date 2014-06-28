@@ -31,7 +31,7 @@ $(document).ready(function () {
             for (var i = 0; i < 3; i++) {
                 var $band = $(this.element).find("tr").slice(3 * i, 3 * (i + 1));
                 for (var j = 0; j < 3; j++) {
-                    result.push($band.find("td").filter(function (i, cell) {
+                    result.push($band.find("td").filter(function (k, cell) {
                         var index = $(cell).index();
                         return index >= 3 * j && index < 3 * (j + 1);
                     }));
