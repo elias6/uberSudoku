@@ -20,25 +20,25 @@ $(document).ready(function () {
 
         columns: function () {
             var result = [];
-            for (var i = 0; i < 9; i++) {
+            _(9).times(function (i) {
                 result.push($(this.element).find("td").filter(function (j, cell) {
                     return $(cell).index() === i;
                 }));
-            }
+            }, this);
             return result;
         },
 
         boxes: function () {
             var result = [];
-            for (var i = 0; i < 3; i++) {
+            _(3).times(function (i) {
                 var $band = $(this.element).find("tr").slice(3 * i, 3 * (i + 1));
-                for (var j = 0; j < 3; j++) {
+                _(3).times(function (j) {
                     result.push($band.find("td").filter(function (k, cell) {
                         var index = $(cell).index();
                         return index >= 3 * j && index < 3 * (j + 1);
                     }));
-                }
-            }
+                });
+            }, this);
             return result;
         },
 
@@ -63,7 +63,7 @@ $(document).ready(function () {
                         return counter[number] > 1;
                     });
                 result = result.add($(scope).filter(function (j, cell) {
-                    return duplicateNumbers.indexOf($(cell).find("input").val()) !== -1;
+                    return _(duplicateNumbers).contains($(cell).find("input").val());
                 }));
             });
             return result;
@@ -88,12 +88,12 @@ $(document).ready(function () {
 
             var $grid = $("<table class='grid' />").appendTo(this);
 
-            for (var i = 0; i < 9; i++) {
+            _(9).times(function () {
                 var $row = $("<tr />").appendTo($grid);
-                for (var j = 0; j < 9; j++) {
+                _(9).times(function () {
                     var $cell = $("<td />").appendTo($row);
-                }
-            }
+                });
+            });
 
             $grid.find("td:not(.given)").each(function (i, cell) {
                 $(cell).append("<input type='text' maxlength='1' />");
