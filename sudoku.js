@@ -46,9 +46,9 @@ $(document).ready(function () {
             });
         },
 
-        updateConflicts: function () {
-            $(this.element).find("td").removeClass("conflict");
-            var plugin = this;
+        findConflicts: function () {
+            var result = $(),
+                plugin = this;
 
             var $scopes = $(this.rows()).add(this.columns()).add(this.boxes());
             $scopes.each(function (i, scope) {
@@ -60,10 +60,17 @@ $(document).ready(function () {
                     duplicateNumbers = Object.keys(counter).filter(function (number) {
                         return counter[number] > 1;
                     });
-                $(scope).filter(function (j, cell) {
+                result = result.add($(scope).filter(function (j, cell) {
                     return duplicateNumbers.indexOf($(cell).find("input").val()) !== -1;
-                }).addClass("conflict");
+                }));
             });
+            return result;
+        },
+
+        updateConflicts: function () {
+            var $conflicts = this.findConflicts();
+            $conflicts.addClass("conflict");
+            $(this.element).find("td").not($conflicts).removeClass("conflict");
         }
     });
 
