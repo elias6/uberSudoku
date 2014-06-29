@@ -24,11 +24,11 @@ h1 {
 }
 .uberSudoku .grid td input {
     border: none;
-    font-size: 28px;
-    height: 36px;
+    font-size: 26px;
+    height: 32px;
     padding: 0;
     text-align: center;
-    width: 36px;
+    width: 32px;
 }
 .uberSudoku .grid td.invalid input, .uberSudoku .grid td.conflict input {
     background: #ffaa88;
