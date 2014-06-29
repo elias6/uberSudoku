@@ -1,3 +1,11 @@
+h1 {
+    background: #ffffcc;
+    font-family: Helvetica, Arial, sans-serif;
+    margin: 0 0 5px;
+    padding: 5px;
+    text-align: center;
+    text-shadow: rgba(0, 0, 0, 0.5) 2px 2px 5px;
+}
 .uberSudoku .grid {
     border: solid 5px #444444;
     border-collapse: collapse;
