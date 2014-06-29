@@ -56,7 +56,7 @@ $(document).ready(function () {
             $scopes.each(function (i, scope) {
                 var scopeValues = plugin.getValues(scope),
                     scopeNumbers = scopeValues.filter(function (j, value) {
-                        return /^\d$/.test(value);
+                        return /^[1-9]$/.test(value);
                     }),
                     counter = _(scopeNumbers).countBy(),
                     duplicateNumbers = Object.keys(counter).filter(function (number) {
