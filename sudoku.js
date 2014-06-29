@@ -73,6 +73,16 @@ $(document).ready(function () {
             var $conflicts = this.findConflicts();
             $conflicts.addClass("conflict");
             $(this.element).find("td").not($conflicts).removeClass("conflict");
+        },
+
+        isWin: function () {
+            return _(this.getValues($(this.element).find("td"))).all(function (value) {
+                return /^[1-9]$/.test(value);
+            });
+        },
+
+        showWin: function () {
+            alert("Congratulations!");
         }
     });
 
@@ -119,6 +129,9 @@ $(document).ready(function () {
 
             $grid.on("input", "td input", function (event) {
                 plugin.updateConflicts();
+                if (plugin.isWin()) {
+                    plugin.showWin();
+                }
             });
         });
     };
