@@ -16,7 +16,8 @@ $(document).ready(function () {
 
             $(this.element).empty().addClass("uberSudoku");
 
-            var $grid = $("<table class='grid' />").appendTo(this.element);
+            var $form = $("<form novalidate />").appendTo(this.element),
+                $grid = $("<table class='grid' />").appendTo($form);
 
             _(9).times(function () {
                 var $row = $("<tr />").appendTo($grid);
@@ -26,7 +27,7 @@ $(document).ready(function () {
             });
 
             $grid.find("td:not(.given)").each(function (i, cell) {
-                $(cell).append("<input type='text' maxlength='1' />");
+                $(cell).append("<input type='text' maxlength='1' pattern='[0-9]*' />");
             });
 
             $grid.on("keypress", "td input", function (event) {
