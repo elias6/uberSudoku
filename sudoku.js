@@ -12,8 +12,11 @@ $(document).ready(function () {
 
     $.extend(Plugin.prototype, {
         init: function () {
-            var plugin = this;
+            this.grid = this.createGrid();
+            this.attachEvents();
+        },
 
+        createGrid: function () {
             $(this.element).empty().addClass("uberSudoku");
 
             var $form = $("<form novalidate />").appendTo(this.element),
@@ -26,6 +29,13 @@ $(document).ready(function () {
                         .appendTo($row);
                 });
             });
+
+            return $grid[0];
+        },
+
+        attachEvents: function () {
+            var plugin = this,
+                $grid = $(plugin.grid)
 
             $grid.on("keypress", "td input", function (event) {
                 var rowIndex = $(this).closest("tr").index(),
