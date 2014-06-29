@@ -121,7 +121,7 @@ $(document).ready(function () {
         isWin: function () {
             return _(this.getValues($(this.element).find("td"))).all(function (value) {
                 return /^[1-9]$/.test(value);
-            });
+            }) && this.findConflicts().length === 0;
         },
 
         showWin: function () {
