@@ -81,7 +81,7 @@ $(document).ready(function () {
             });
         },
 
-        rows: function () {
+        getRows: function () {
             var result = [];
             $(this.element).find("tr").each(function (i, row) {
                 result.push($(row).find("td"));
@@ -89,7 +89,7 @@ $(document).ready(function () {
             return result;
         },
 
-        columns: function () {
+        getColumns: function () {
             var result = [];
             _(9).times(function (i) {
                 result.push($(this.element).find("td").filter(function (j, cell) {
@@ -99,7 +99,7 @@ $(document).ready(function () {
             return result;
         },
 
-        boxes: function () {
+        getBoxes: function () {
             var result = [];
             _(3).times(function (i) {
                 var $band = $(this.element).find("tr").slice(3 * i, 3 * (i + 1));
@@ -123,7 +123,7 @@ $(document).ready(function () {
             var result = $(),
                 plugin = this;
 
-            var $scopes = $(this.rows()).add(this.columns()).add(this.boxes());
+            var $scopes = $(this.getRows()).add(this.getColumns()).add(this.getBoxes());
             $scopes.each(function (i, scope) {
                 var scopeValues = plugin.getValues(scope),
                     scopeNumbers = scopeValues.filter(function (j, value) {
