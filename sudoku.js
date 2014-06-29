@@ -22,12 +22,9 @@ $(document).ready(function () {
             _(9).times(function () {
                 var $row = $("<tr />").appendTo($grid);
                 _(9).times(function () {
-                    var $cell = $("<td />").appendTo($row);
+                    var $cell = $("<td><input type='text' maxlength='1' pattern='[0-9]*' /></td>")
+                        .appendTo($row);
                 });
-            });
-
-            $grid.find("td:not(.given)").each(function (i, cell) {
-                $(cell).append("<input type='text' maxlength='1' pattern='[0-9]*' />");
             });
 
             $grid.on("keypress", "td input", function (event) {
