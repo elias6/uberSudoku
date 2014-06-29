@@ -13,6 +13,7 @@ $(document).ready(function () {
     $.extend(Plugin.prototype, {
         init: function () {
             this.grid = this.createGrid();
+            this.populateGrid();
             this.attachEvents();
         },
 
@@ -31,6 +32,23 @@ $(document).ready(function () {
             });
 
             return $grid[0];
+        },
+
+        populateGrid: function () {
+            var givenCount = 0;
+            while (givenCount < 30) {
+                var rowIndex = _.random(0, 8),
+                    columnIndex = _.random(0, 8),
+                    digit = _.random(1, 9),
+                    $input = $(this.element).find("tr").eq(rowIndex).find("td").eq(columnIndex)
+                        .find("input");
+                $input.val(digit).attr("readonly", true);
+                if (this.findConflicts().length > 0) {
+                    $input.val("").attr("readonly", false);
+                } else {
+                    givenCount++;
+                }
+            }
         },
 
         attachEvents: function () {
