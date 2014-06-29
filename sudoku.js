@@ -7,9 +7,54 @@ $(document).ready(function () {
 (function ($, undefined) {
     function Plugin(element) {
         this.element = element;
+        this.init();
     }
 
     $.extend(Plugin.prototype, {
+        init: function () {
+            var plugin = this;
+
+            $(this.element).addClass("uberSudoku");
+
+            var $grid = $("<table class='grid' />").appendTo(this.element);
+
+            _(9).times(function () {
+                var $row = $("<tr />").appendTo($grid);
+                _(9).times(function () {
+                    var $cell = $("<td />").appendTo($row);
+                });
+            });
+
+            $grid.find("td:not(.given)").each(function (i, cell) {
+                $(cell).append("<input type='text' maxlength='1' />");
+            });
+
+            $grid.on("keypress", "td input", function (event) {
+                var rowIndex = $(this).closest("tr").index(),
+                    columnIndex = $(this).closest("td").index(),
+                    $targetCell;
+                if (event.keyCode === 37 && columnIndex > 0) {  // left
+                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex - 1);
+                } else if (event.keyCode === 38 && rowIndex > 0) {  // up
+                    $targetCell = $grid.find("tr").eq(rowIndex - 1).find("td").eq(columnIndex);
+                } else if (event.keyCode === 39 && columnIndex < 8) {  // right
+                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex + 1);
+                } else if (event.keyCode === 40 && rowIndex < 8) {  // down
+                    $targetCell = $grid.find("tr").eq(rowIndex + 1).find("td").eq(columnIndex);
+                }
+                if ($targetCell) {
+                    $targetCell.find("input").focus().select();
+                }
+            });
+
+            $grid.on("input", "td input", function (event) {
+                plugin.updateConflicts();
+                if (plugin.isWin()) {
+                    plugin.showWin();
+                }
+            });
+        },
+
         rows: function () {
             var result = [];
             $(this.element).find("tr").each(function (i, row) {
@@ -91,48 +136,6 @@ $(document).ready(function () {
             if (! $(this).data("plugin_uberSudoku")) {
                 $(this).data("plugin_uberSudoku", new Plugin(this, options));
             }
-
-            var plugin = $(this).data("plugin_uberSudoku");
-
-            $(this).addClass("uberSudoku");
-
-            var $grid = $("<table class='grid' />").appendTo(this);
-
-            _(9).times(function () {
-                var $row = $("<tr />").appendTo($grid);
-                _(9).times(function () {
-                    var $cell = $("<td />").appendTo($row);
-                });
-            });
-
-            $grid.find("td:not(.given)").each(function (i, cell) {
-                $(cell).append("<input type='text' maxlength='1' />");
-            });
-
-            $grid.on("keypress", "td input", function (event) {
-                var rowIndex = $(this).closest("tr").index(),
-                    columnIndex = $(this).closest("td").index(),
-                    $targetCell;
-                if (event.keyCode === 37 && columnIndex > 0) {  // left
-                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex - 1);
-                } else if (event.keyCode === 38 && rowIndex > 0) {  // up
-                    $targetCell = $grid.find("tr").eq(rowIndex - 1).find("td").eq(columnIndex);
-                } else if (event.keyCode === 39 && columnIndex < 8) {  // right
-                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex + 1);
-                } else if (event.keyCode === 40 && rowIndex < 8) {  // down
-                    $targetCell = $grid.find("tr").eq(rowIndex + 1).find("td").eq(columnIndex);
-                }
-                if ($targetCell) {
-                    $targetCell.find("input").focus().select();
-                }
-            });
-
-            $grid.on("input", "td input", function (event) {
-                plugin.updateConflicts();
-                if (plugin.isWin()) {
-                    plugin.showWin();
-                }
-            });
         });
     };
 })(jQuery);
