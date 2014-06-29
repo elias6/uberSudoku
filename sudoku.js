@@ -14,7 +14,7 @@ $(document).ready(function () {
         init: function () {
             var plugin = this;
 
-            $(this.element).addClass("uberSudoku");
+            $(this.element).empty().addClass("uberSudoku");
 
             var $grid = $("<table class='grid' />").appendTo(this.element);
 
