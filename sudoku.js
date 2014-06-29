@@ -20,8 +20,7 @@ $(document).ready(function () {
         createGrid: function () {
             $(this.element).empty().addClass("uberSudoku");
 
-            var $form = $("<form novalidate />").appendTo(this.element),
-                $grid = $("<table class='grid' />").appendTo($form);
+            var $grid = $("<table class='grid' />").appendTo(this.element);
 
             _(9).times(function () {
                 var $row = $("<tr />").appendTo($grid);
@@ -78,6 +77,7 @@ $(document).ready(function () {
                 if (plugin.isWin()) {
                     plugin.showWin();
                 }
+                this.setCustomValidity(" ");
             });
         },
 

@@ -39,3 +39,6 @@ h1 {
 .uberSudoku .grid td.invalid input, .uberSudoku .grid td.conflict input {
     background: #ffaa88;
 }
+.uberSudoku .grid td input:-moz-ui-invalid {
+    box-shadow: none;
+}
