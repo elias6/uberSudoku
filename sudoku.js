@@ -12,7 +12,6 @@ $(document).ready(function () {
 
     $.extend(Plugin.prototype, {
         init: function () {
-            var plugin = this;
             this.$grid = this.createGrid();
 
             this.rows = this.$grid.find("tr").map(function (i, row) {
@@ -20,20 +19,20 @@ $(document).ready(function () {
             }).get();
 
             this.columns = _(9).times(function (i) {
-                return plugin.$grid.find("td").filter(function (j, cell) {
+                return this.$grid.find("td").filter(function (j, cell) {
                     return $(cell).index() === i;
                 });
-            });
+            }, this);
 
             this.boxes = _.flatten(_(3).times(function (i) {
-                var $band = plugin.$grid.find("tr").slice(3 * i, 3 * (i + 1));
+                var $band = this.$grid.find("tr").slice(3 * i, 3 * (i + 1));
                 return _(3).times(function (j) {
                     return $band.find("td").filter(function (k, cell) {
                         var index = $(cell).index();
                         return index >= 3 * j && index < 3 * (j + 1);
                     });
                 });
-            }), true);
+            }, this), true);
 
             this.populateGrid();
             this.attachEvents();
