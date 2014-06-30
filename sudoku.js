@@ -140,7 +140,7 @@ $(document).ready(function () {
         moveIsValid: function (rowIndex, columnIndex, digit) {
             if (digit === "") {
                 return true;
-            } else if (/^\d$/.test(digit)) {
+            } else if (/^[1-9]$/.test(digit)) {
                 var $cell = this.$grid.find("tr").eq(rowIndex).find("td").eq(columnIndex),
                     $row = _(this.rows).find(function ($r) {
                         return $r.is($cell);
