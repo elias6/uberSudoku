@@ -81,28 +81,27 @@ $(document).ready(function () {
                 $grid = plugin.$grid;
 
             $grid.on("keypress", ".cell input", function (event) {
-                var rowIndex = $(this).closest("tr").index(),
-                    columnIndex = $(this).closest(".cell").index(),
-                    $targetCell,
+                var $cell = $(this).closest(".cell"),
+                    $row = $(this).closest("tr"),
+                    columnLabel = $cell.attr("data-column-label"),
+                    $targetCell = $(),
                     value = $(this).val();
-                if (event.keyCode === 37 && columnIndex > 0) {  // left
+                if (event.keyCode === 37) {  // left
                     var cursorIsAtStart = this.selectionEnd === 0;
                     if (value.length === 0 || cursorIsAtStart || $(this).is("[readonly]")) {
-                        $targetCell = $(this).closest("tr").find(".cell").eq(columnIndex - 1);
+                        $targetCell = $cell.prev();
                     }
-                } else if (event.keyCode === 38 && rowIndex > 0) {  // up
-                    $targetCell = $grid.find("tr").eq(rowIndex - 1).find(".cell").eq(columnIndex);
-                } else if (event.keyCode === 39 && columnIndex < 8) {  // right
+                } else if (event.keyCode === 38) {  // up
+                    $targetCell = $row.prev().find(".cell[data-column-label=" + columnLabel + "]");
+                } else if (event.keyCode === 39) {  // right
                     var cursorIsAtEnd = this.selectionStart === value.length;
                     if (value.length === 0 || cursorIsAtEnd || $(this).is("[readonly]")) {
-                        $targetCell = $(this).closest("tr").find(".cell").eq(columnIndex + 1);
+                        $targetCell = $cell.next();
                     }
-                } else if (event.keyCode === 40 && rowIndex < 8) {  // down
-                    $targetCell = $grid.find("tr").eq(rowIndex + 1).find(".cell").eq(columnIndex);
+                } else if (event.keyCode === 40) {  // down
+                    $targetCell = $row.next().find(".cell[data-column-label=" + columnLabel + "]");
                 }
-                if ($targetCell) {
-                    $targetCell.find("input").select();
-                }
+                $targetCell.find("input").select();
             });
 
             $grid.on("input", ".cell input", function (event) {
