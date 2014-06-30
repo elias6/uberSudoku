@@ -79,13 +79,20 @@ $(document).ready(function () {
             $grid.on("keypress", "td input", function (event) {
                 var rowIndex = $(this).closest("tr").index(),
                     columnIndex = $(this).closest("td").index(),
-                    $targetCell;
+                    $targetCell,
+                    value = $(this).val();
                 if (event.keyCode === 37 && columnIndex > 0) {  // left
-                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex - 1);
+                    var cursorIsAtStart = this.selectionEnd === 0;
+                    if (value.length === 0 || cursorIsAtStart || $(this).is("[readonly]")) {
+                        $targetCell = $(this).closest("tr").find("td").eq(columnIndex - 1);
+                    }
                 } else if (event.keyCode === 38 && rowIndex > 0) {  // up
                     $targetCell = $grid.find("tr").eq(rowIndex - 1).find("td").eq(columnIndex);
                 } else if (event.keyCode === 39 && columnIndex < 8) {  // right
-                    $targetCell = $(this).closest("tr").find("td").eq(columnIndex + 1);
+                    var cursorIsAtEnd = this.selectionStart === value.length;
+                    if (value.length === 0 || cursorIsAtEnd || $(this).is("[readonly]")) {
+                        $targetCell = $(this).closest("tr").find("td").eq(columnIndex + 1);
+                    }
                 } else if (event.keyCode === 40 && rowIndex < 8) {  // down
                     $targetCell = $grid.find("tr").eq(rowIndex + 1).find("td").eq(columnIndex);
                 }
