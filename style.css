@@ -39,7 +39,7 @@ h1 {
     font-family: Helvetica, Arial, sans-serif;
     font-weight: normal;
 }
-.uberSudoku .grid td.invalid input, .uberSudoku .grid td.conflict input {
+.uberSudoku .grid td.conflict input {
     background: #ffaa88;
 }
 .uberSudoku .grid td.pencil input {
