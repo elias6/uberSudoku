@@ -12,7 +12,32 @@ $(document).ready(function () {
 
     $.extend(Plugin.prototype, {
         init: function () {
+            var plugin = this;
             this.$grid = this.createGrid();
+
+            this.rows = [];
+            this.$grid.find("tr").each(function (i, row) {
+                plugin.rows.push($(row).find("td"));
+            });
+
+            this.columns = [];
+            _(9).times(function (i) {
+                plugin.columns.push(plugin.$grid.find("td").filter(function (j, cell) {
+                    return $(cell).index() === i;
+                }));
+            });
+
+            this.boxes = [];
+            _(3).times(function (i) {
+                var $band = plugin.$grid.find("tr").slice(3 * i, 3 * (i + 1));
+                _(3).times(function (j) {
+                    plugin.boxes.push($band.find("td").filter(function (k, cell) {
+                        var index = $(cell).index();
+                        return index >= 3 * j && index < 3 * (j + 1);
+                    }));
+                });
+            });
+
             this.populateGrid();
             this.attachEvents();
             $(this.element).append(this.$grid);
@@ -35,17 +60,16 @@ $(document).ready(function () {
         },
 
         populateGrid: function () {
+            this.$grid.find("td input").val("").removeAttr("readonly");
             var givenCount = 0;
             while (givenCount < 30) {
                 var rowIndex = _.random(0, 8),
                     columnIndex = _.random(0, 8),
                     digit = _.random(1, 9),
-                    $input = $(this.$grid).find("tr").eq(rowIndex).find("td").eq(columnIndex)
+                    $input = this.$grid.find("tr").eq(rowIndex).find("td").eq(columnIndex)
                         .find("input");
-                $input.val(digit).attr("readonly", true);
-                if (this.findConflicts().length > 0) {
-                    $input.val("").attr("readonly", false);
-                } else {
+                if ($input.val() === "" && this.moveIsValid(rowIndex, columnIndex, digit)) {
+                    $input.val(digit).attr("readonly", true)
                     givenCount++;
                 }
             }
@@ -82,38 +106,6 @@ $(document).ready(function () {
             });
         },
 
-        getRows: function () {
-            var result = [];
-            this.$grid.find("tr").each(function (i, row) {
-                result.push($(row).find("td"));
-            });
-            return result;
-        },
-
-        getColumns: function () {
-            var result = [];
-            _(9).times(function (i) {
-                result.push(this.$grid.find("td").filter(function (j, cell) {
-                    return $(cell).index() === i;
-                }));
-            }, this);
-            return result;
-        },
-
-        getBoxes: function () {
-            var result = [];
-            _(3).times(function (i) {
-                var $band = this.$grid.find("tr").slice(3 * i, 3 * (i + 1));
-                _(3).times(function (j) {
-                    result.push($band.find("td").filter(function (k, cell) {
-                        var index = $(cell).index();
-                        return index >= 3 * j && index < 3 * (j + 1);
-                    }));
-                });
-            }, this);
-            return result;
-        },
-
         getValues: function (cells) {
             return $(cells).map(function (i, cell) {
                 return $(cell).find("input").val();
@@ -124,7 +116,7 @@ $(document).ready(function () {
             var result = $(),
                 plugin = this;
 
-            var $scopes = $(this.getRows()).add(this.getColumns()).add(this.getBoxes());
+            var $scopes = $(this.rows).add(this.columns).add(this.boxes);
             $scopes.each(function (i, scope) {
                 var scopeValues = plugin.getValues(scope),
                     scopeNumbers = scopeValues.filter(function (j, value) {
@@ -139,6 +131,29 @@ $(document).ready(function () {
                 }));
             });
             return result;
+        },
+
+        moveIsValid: function (rowIndex, columnIndex, digit) {
+            if (digit === "") {
+                return true;
+            } else if (/^\d$/.test(digit)) {
+                var $cell = this.$grid.find("tr").eq(rowIndex).find("td").eq(columnIndex),
+                    $row = _(this.rows).find(function ($r) {
+                        return $r.is($cell);
+                    }),
+                    $column = _(this.columns).find(function ($c) {
+                        return $c.is($cell);
+                    }),
+                    $box = _(this.boxes).find(function ($b) {
+                        return $b.is($cell);
+                    }),
+                    $inputsInScopes = $row.add($column).add($box).not($cell).find("input");
+                return _($inputsInScopes).all(function (input) {
+                    return $(input).val() !== digit.toString();
+                });
+            } else {
+                return false;
+            }
         },
 
         updateConflicts: function () {
