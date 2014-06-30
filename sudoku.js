@@ -44,12 +44,18 @@ $(document).ready(function () {
 
             var $grid = $("<table class='grid' />");
 
-            _(9).times(function () {
-                var $row = $("<tr />").appendTo($grid);
-                _(9).times(function () {
-                    var $cell = $("<td class='cell'>" +
-                            "<input type='text' maxlength='5' pattern='[0-9]*' /></td>")
-                            .appendTo($row);
+            _(9).times(function (i) {
+                var rowLabel = 'abcdefghi'[i],
+                    $row = $("<tr />").appendTo($grid);
+                _(9).times(function (j) {
+                    var columnLabel = j + 1,
+                        $cell = $("<td />", {
+                            "class": "cell",
+                            "data-row-label": rowLabel,
+                            "data-column-label": columnLabel,
+                            "data-cell-label": rowLabel + columnLabel});
+                    $cell.append("<input type='text' maxlength='5' pattern='[0-9]*' />");
+                    $row.append($cell);
                 });
             });
 
