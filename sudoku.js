@@ -109,6 +109,7 @@ $(document).ready(function () {
                     plugin.showWin();
                 }
                 this.setCustomValidity(" ");
+                $(this).parent().toggleClass("pencil", $(this).val().length > 1);
             });
         },
 
