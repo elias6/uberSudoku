@@ -20,6 +20,7 @@ h1 {
 }
 .uberSudoku .grid td {
     border: solid 1px #cccccc;
+    font-size: 26px;
     padding: 0;
 }
 .uberSudoku .grid td input {

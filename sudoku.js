@@ -48,7 +48,7 @@ $(document).ready(function () {
             _(9).times(function () {
                 var $row = $("<tr />").appendTo($grid);
                 _(9).times(function () {
-                    var $cell = $("<td><input type='text' maxlength='1' pattern='[0-9]*' /></td>")
+                    var $cell = $("<td><input type='text' maxlength='5' pattern='[0-9]*' /></td>")
                         .appendTo($row);
                 });
             });
@@ -102,6 +102,8 @@ $(document).ready(function () {
             });
 
             $grid.on("input", "td input", function (event) {
+                var fontEms = ([1, 1, 0.9, 0.6, 0.5, 0.4][$(this).val().length] || 0.4);
+                $(this).css("font-size", fontEms + "em");
                 plugin.updateConflicts();
                 if (plugin.isWin()) {
                     plugin.showWin();
