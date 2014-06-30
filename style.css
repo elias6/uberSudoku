@@ -12,18 +12,18 @@ h1 {
     margin: 0 auto;
     text-align: center;
 }
-.uberSudoku .grid tr:nth-of-type(3n) td {
+.uberSudoku .grid tr:nth-of-type(3n) .cell {
     border-bottom: solid 2px #888888;
 }
-.uberSudoku .grid tr td:nth-of-type(3n) {
+.uberSudoku .grid tr .cell:nth-of-type(3n) {
     border-right: solid 2px #888888;
 }
-.uberSudoku .grid td {
+.uberSudoku .grid .cell {
     border: solid 1px #cccccc;
     font-size: 26px;
     padding: 0;
 }
-.uberSudoku .grid td input {
+.uberSudoku .grid .cell input {
     border: none;
     color: #3f78ff;
     font-family: cursive;
@@ -34,17 +34,17 @@ h1 {
     text-align: center;
     width: 32px;
 }
-.uberSudoku .grid td input[readonly] {
+.uberSudoku .grid .cell input[readonly] {
     color: #000000;
     font-family: Helvetica, Arial, sans-serif;
     font-weight: normal;
 }
-.uberSudoku .grid td.conflict input {
+.uberSudoku .grid .cell.conflict input {
     background: #ffaa88;
 }
-.uberSudoku .grid td.pencil input {
+.uberSudoku .grid .cell.pencil input {
     background: #dddddd;
 }
-.uberSudoku .grid td input:-moz-ui-invalid {
+.uberSudoku .grid .cell input:-moz-ui-invalid {
     box-shadow: none;
 }
