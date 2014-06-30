@@ -90,7 +90,7 @@ $(document).ready(function () {
                     $targetCell = $grid.find("tr").eq(rowIndex + 1).find("td").eq(columnIndex);
                 }
                 if ($targetCell) {
-                    $targetCell.find("input").focus().select();
+                    $targetCell.find("input").select();
                 }
             });
 
