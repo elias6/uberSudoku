@@ -59,7 +59,7 @@ $(document).ready(function () {
         populateGrid: function () {
             this.$grid.find("td input").val("").removeAttr("readonly");
             var givenCount = 0;
-            while (givenCount < 30) {
+            while (givenCount < 20) {
                 var rowIndex = _.random(0, 8),
                     columnIndex = _.random(0, 8),
                     digit = _.random(1, 9),
