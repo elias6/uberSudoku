@@ -12,15 +12,16 @@ $(document).ready(function () {
 
     $.extend(Plugin.prototype, {
         init: function () {
-            this.grid = this.createGrid();
+            this.$grid = this.createGrid();
             this.populateGrid();
             this.attachEvents();
+            $(this.element).append(this.$grid);
         },
 
         createGrid: function () {
             $(this.element).empty().addClass("uberSudoku");
 
-            var $grid = $("<table class='grid' />").appendTo(this.element);
+            var $grid = $("<table class='grid' />");
 
             _(9).times(function () {
                 var $row = $("<tr />").appendTo($grid);
@@ -30,7 +31,7 @@ $(document).ready(function () {
                 });
             });
 
-            return $grid[0];
+            return $grid;
         },
 
         populateGrid: function () {
@@ -39,7 +40,7 @@ $(document).ready(function () {
                 var rowIndex = _.random(0, 8),
                     columnIndex = _.random(0, 8),
                     digit = _.random(1, 9),
-                    $input = $(this.element).find("tr").eq(rowIndex).find("td").eq(columnIndex)
+                    $input = $(this.$grid).find("tr").eq(rowIndex).find("td").eq(columnIndex)
                         .find("input");
                 $input.val(digit).attr("readonly", true);
                 if (this.findConflicts().length > 0) {
@@ -52,7 +53,7 @@ $(document).ready(function () {
 
         attachEvents: function () {
             var plugin = this,
-                $grid = $(plugin.grid)
+                $grid = plugin.$grid;
 
             $grid.on("keypress", "td input", function (event) {
                 var rowIndex = $(this).closest("tr").index(),
@@ -83,7 +84,7 @@ $(document).ready(function () {
 
         getRows: function () {
             var result = [];
-            $(this.element).find("tr").each(function (i, row) {
+            this.$grid.find("tr").each(function (i, row) {
                 result.push($(row).find("td"));
             });
             return result;
@@ -92,7 +93,7 @@ $(document).ready(function () {
         getColumns: function () {
             var result = [];
             _(9).times(function (i) {
-                result.push($(this.element).find("td").filter(function (j, cell) {
+                result.push(this.$grid.find("td").filter(function (j, cell) {
                     return $(cell).index() === i;
                 }));
             }, this);
@@ -102,7 +103,7 @@ $(document).ready(function () {
         getBoxes: function () {
             var result = [];
             _(3).times(function (i) {
-                var $band = $(this.element).find("tr").slice(3 * i, 3 * (i + 1));
+                var $band = this.$grid.find("tr").slice(3 * i, 3 * (i + 1));
                 _(3).times(function (j) {
                     result.push($band.find("td").filter(function (k, cell) {
                         var index = $(cell).index();
@@ -143,11 +144,11 @@ $(document).ready(function () {
         updateConflicts: function () {
             var $conflicts = this.findConflicts();
             $conflicts.addClass("conflict");
-            $(this.element).find("td").not($conflicts).removeClass("conflict");
+            this.$grid.find("td").not($conflicts).removeClass("conflict");
         },
 
         isWin: function () {
-            return _(this.getValues($(this.element).find("td"))).all(function (value) {
+            return _(this.getValues(this.$grid.find("td"))).all(function (value) {
                 return /^[1-9]$/.test(value);
             }) && this.findConflicts().length === 0;
         },
