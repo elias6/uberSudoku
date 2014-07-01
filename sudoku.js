@@ -14,17 +14,19 @@ $(document).ready(function () {
         init: function () {
             this.$grid = this.createGrid();
 
+            this.$cells = this.$grid.find(".cell");
+
             this.rows = _("abcdefghi").map(function (rowLabel) {
-                return this.$grid.find(".cell[data-row-label=" + rowLabel + "]");
+                return this.$cells.filter("[data-row-label=" + rowLabel + "]");
             }, this);
 
             this.columns = _.range(1, 10).map(function (columnLabel) {
-                return this.$grid.find(".cell[data-column-label=" + columnLabel + "]");
+                return this.$cells.filter("[data-column-label=" + columnLabel + "]");
             }, this);
 
             this.boxes = _.flatten(
                 ["abc", "def", "ghi"].map(function (rowLabels) {
-                    var $band = this.$grid.find(".cell").filter(function (i, cell) {
+                    var $band = this.$cells.filter(function (i, cell) {
                         return _(rowLabels).contains($(cell).attr("data-row-label"));
                     });
                     return ["123", "456", "789"].map(function (columnLabels) {
@@ -64,12 +66,13 @@ $(document).ready(function () {
         },
 
         populateGrid: function () {
-            this.$grid.find(".cell input").val("").removeAttr("readonly");
+            this.$cells.find("input").val("").removeAttr("readonly");
             var givenCount = 0;
             while (givenCount < 20) {
                 var digit = _.random(1, 9),
                     cellLabel = _.sample("abcdefghi") + _.random(1, 9),
-                    $input = this.$grid.find(".cell[data-cell-label=" + cellLabel + "] input");
+                    $cell = this.$cells.filter("[data-cell-label=" + cellLabel + "]"),
+                    $input = $cell.find("input");
                 if ($input.val() === "" && this.moveIsValid(cellLabel, digit)) {
                     $input.val(digit).attr("readonly", true)
                     givenCount++;
@@ -148,7 +151,7 @@ $(document).ready(function () {
             if (digit === "") {
                 return true;
             } else if (/^[1-9]$/.test(digit)) {
-                var $cell = this.$grid.find(".cell[data-cell-label=" + cellLabel + "]"),
+                var $cell = this.$cells.filter("[data-cell-label=" + cellLabel + "]"),
                     $row = _(this.rows).find(function ($r) {
                         return $r.is($cell);
                     }),
@@ -170,11 +173,11 @@ $(document).ready(function () {
         updateConflicts: function () {
             var $conflicts = this.findConflicts();
             $conflicts.addClass("conflict");
-            this.$grid.find(".cell").not($conflicts).removeClass("conflict");
+            this.$cells.not($conflicts).removeClass("conflict");
         },
 
         isWin: function () {
-            return _(this.getValues(this.$grid.find(".cell"))).all(function (value) {
+            return _(this.getValues(this.$cells)).all(function (value) {
                 return /^[1-9]$/.test(value);
             }) && this.findConflicts().length === 0;
         },
