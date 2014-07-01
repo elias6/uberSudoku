@@ -65,14 +65,19 @@ $(document).ready(function () {
             return $grid;
         },
 
+        getCell: function (cellLabel) {
+            return this.$cells.filter(function (i, cell) {
+                return $(cell).attr("data-cell-label") === cellLabel;
+            });
+        },
+
         populateGrid: function () {
             this.$cells.find("input").val("").removeAttr("readonly");
             var givenCount = 0;
             while (givenCount < 20) {
                 var digit = _.random(1, 9),
                     cellLabel = _.sample("abcdefghi") + _.random(1, 9),
-                    $cell = this.$cells.filter("[data-cell-label=" + cellLabel + "]"),
-                    $input = $cell.find("input");
+                    $input = this.getCell(cellLabel).find("input");
                 if ($input.val() === "" && this.moveIsValid(cellLabel, digit)) {
                     $input.val(digit).attr("readonly", true)
                     givenCount++;
@@ -151,7 +156,7 @@ $(document).ready(function () {
             if (digit === "") {
                 return true;
             } else if (/^[1-9]$/.test(digit)) {
-                var $cell = this.$cells.filter("[data-cell-label=" + cellLabel + "]"),
+                var $cell = this.getCell(cellLabel),
                     $row = _(this.rows).find(function ($r) {
                         return $r.is($cell);
                     }),
