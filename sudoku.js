@@ -19,7 +19,7 @@ $(document).ready(function () {
                 });
             })
         ),
-        ROW_CELL_LABELS = _.object(ALL_ROW_LABELS.map(function (rowLabel) {
+        ROW_CELL_LABEL_HASH = _.object(ALL_ROW_LABELS.map(function (rowLabel) {
             return [
                 rowLabel,
                 ALL_COLUMN_LABELS.map(function (columnLabel) {
@@ -27,7 +27,7 @@ $(document).ready(function () {
                 })
             ];
         })),
-        COLUMN_CELL_LABELS = _.object(ALL_COLUMN_LABELS.map(function (columnLabel) {
+        COLUMN_CELL_LABEL_HASH = _.object(ALL_COLUMN_LABELS.map(function (columnLabel) {
             return [
                 columnLabel,
                 ALL_ROW_LABELS.map(function (rowLabel) {
@@ -35,7 +35,7 @@ $(document).ready(function () {
                 })
             ];
         })),
-        BOX_CELL_LABELS = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
+        BOX_CELL_LABEL_HASH = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
             var rowLabel = cellLabel.charAt(0),
                 columnLabel = cellLabel.charAt(1),
                 bandRowPos = 3 * Math.floor(ALL_ROW_LABELS.indexOf(rowLabel) / 3),
@@ -52,12 +52,12 @@ $(document).ready(function () {
             boxCellLabels.sort();
             return [cellLabel, boxCellLabels];
         })),
-        ALL_BOX_CELL_LABELS = _.uniq(_.values(BOX_CELL_LABELS), JSON.stringify),
-        PEER_CELL_LABELS = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
+        ALL_BOX_CELL_LABELS = _.uniq(_.values(BOX_CELL_LABEL_HASH), JSON.stringify),
+        PEER_CELL_LABEL_HASH = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
             var peerLabels = _.union(
-                    ROW_CELL_LABELS[cellLabel.charAt(0)],
-                    COLUMN_CELL_LABELS[cellLabel.charAt(1)],
-                    BOX_CELL_LABELS[cellLabel]);
+                    ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
+                    COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
+                    BOX_CELL_LABEL_HASH[cellLabel]);
             peerLabels.sort();
             return [cellLabel, peerLabels];
         }));
@@ -200,7 +200,7 @@ $(document).ready(function () {
                 return true;
             } else if (/^[1-9]$/.test(digit)) {
                 var $peers = this.$cells.filter(function (i, cell) {
-                        return _(PEER_CELL_LABELS[cellLabel])
+                        return _(PEER_CELL_LABEL_HASH[cellLabel])
                             .contains($(cell).attr("data-cell-label"));
                     });
                 return _($peers.find("input")).all(function (input) {
