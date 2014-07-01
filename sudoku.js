@@ -68,20 +68,6 @@ $(document).ready(function () {
 
             this.$cells = this.$grid.find(".cell");
 
-            this.rows = ALL_ROW_LABELS.map(function (rowLabel) {
-                return this.$cells.filter("[data-row-label=" + rowLabel + "]");
-            }, this);
-
-            this.columns = ALL_COLUMN_LABELS.map(function (columnLabel) {
-                return this.$cells.filter("[data-column-label=" + columnLabel + "]");
-            }, this);
-
-            this.boxes = ALL_BOX_CELL_LABELS.map(function (boxCellLabels) {
-                return this.$cells.filter(function (i, cell) {
-                    return _(boxCellLabels).contains($(cell).attr("data-cell-label"));
-                });
-            }, this);
-
             this.populateGrid();
             this.attachEvents();
             $(this.element).append(this.$grid);
