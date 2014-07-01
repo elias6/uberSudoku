@@ -104,6 +104,14 @@ $(document).ready(function () {
             });
         },
 
+        getInitialDigitHash: function () {
+            return _.object(
+                _(this.$cells.has("input[readonly]")).map(function (cell) {
+                    return [$(cell).attr("data-cell-label"), $(cell).find("input").val()];
+                })
+            );
+        },
+
         populateGrid: function () {
             this.$cells.find("input").val("").removeAttr("readonly");
             var givenCount = 0;
