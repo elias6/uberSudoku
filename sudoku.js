@@ -138,15 +138,15 @@ $(document).ready(function () {
             var $scopes = $(this.rows).add(this.columns).add(this.boxes);
             $scopes.each(function (i, scope) {
                 var scopeValues = plugin.getValues(scope),
-                    scopeNumbers = scopeValues.filter(function (j, value) {
+                    scopeDigits = scopeValues.filter(function (j, value) {
                         return /^[1-9]$/.test(value);
                     }),
-                    counter = _(scopeNumbers).countBy(),
-                    duplicateNumbers = Object.keys(counter).filter(function (number) {
-                        return counter[number] > 1;
+                    counter = _(scopeDigits).countBy(),
+                    duplicateDigits = Object.keys(counter).filter(function (digit) {
+                        return counter[digit] > 1;
                     });
                 result = result.add($(scope).filter(function (j, cell) {
-                    return _(duplicateNumbers).contains($(cell).find("input").val());
+                    return _(duplicateDigits).contains($(cell).find("input").val());
                 }));
             });
             return result;
