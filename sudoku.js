@@ -21,22 +21,12 @@ $(document).ready(function () {
                 });
             })
         ),
-        ROW_CELL_LABEL_HASH = _.object(ALL_ROW_LABELS.map(function (rowLabel) {
-            return [
-                rowLabel,
-                ALL_COLUMN_LABELS.map(function (columnLabel) {
-                    return rowLabel + columnLabel;
-                })
-            ];
-        })),
-        COLUMN_CELL_LABEL_HASH = _.object(ALL_COLUMN_LABELS.map(function (columnLabel) {
-            return [
-                columnLabel,
-                ALL_ROW_LABELS.map(function (rowLabel) {
-                    return rowLabel + columnLabel;
-                })
-            ];
-        })),
+        ROW_CELL_LABEL_HASH = _(ALL_CELL_LABELS).groupBy(function (cellLabel) {
+            return cellLabel.charAt(0);
+        }),
+        COLUMN_CELL_LABEL_HASH = _(ALL_CELL_LABELS).groupBy(function (cellLabel) {
+            return cellLabel.charAt(1);
+        }),
         BOX_CELL_LABEL_HASH = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
             var rowLabel = cellLabel.charAt(0),
                 columnLabel = cellLabel.charAt(1),
@@ -51,8 +41,7 @@ $(document).ready(function () {
                         });
                     })
                 );
-            boxCellLabels.sort();
-            return [cellLabel, boxCellLabels];
+            return [cellLabel, boxCellLabels.sort()];
         })),
         ALL_BOX_CELL_LABELS = _.uniq(_.values(BOX_CELL_LABEL_HASH), JSON.stringify),
         PEER_CELL_LABEL_HASH = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
@@ -60,8 +49,7 @@ $(document).ready(function () {
                     ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
                     COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
                     BOX_CELL_LABEL_HASH[cellLabel]);
-            peerLabels.sort();
-            return [cellLabel, peerLabels];
+            return [cellLabel, peerLabels.sort()];
         }));
 
     $.extend(Plugin.prototype, {
