@@ -100,6 +100,14 @@ $(document).ready(function () {
             );
         },
 
+        getDigitHash: function () {
+            return _.object(
+                _(this.$cells).map(function (cell) {
+                    return [$(cell).attr("data-cell-label"), $(cell).find("input").val()];
+                })
+            );
+        },
+
         populateGrid: function (digitHash) {
             this.$cells.find("input").val("").removeAttr("readonly");
             if (digitHash) {
