@@ -14,25 +14,26 @@ $(document).ready(function () {
         init: function () {
             this.$grid = this.createGrid();
 
-            this.rows = this.$grid.find("tr").map(function (i, row) {
-                return $(row).find(".cell");
-            }).get();
-
-            this.columns = _(9).times(function (i) {
-                return this.$grid.find(".cell").filter(function (j, cell) {
-                    return $(cell).index() === i;
-                });
+            this.rows = _("abcdefghi").map(function (rowLabel) {
+                return this.$grid.find(".cell[data-row-label=" + rowLabel + "]");
             }, this);
 
-            this.boxes = _.flatten(_(3).times(function (i) {
-                var $band = this.$grid.find("tr").slice(3 * i, 3 * (i + 1));
-                return _(3).times(function (j) {
-                    return $band.find(".cell").filter(function (k, cell) {
-                        var index = $(cell).index();
-                        return index >= 3 * j && index < 3 * (j + 1);
+            this.columns = _.range(1, 10).map(function (columnLabel) {
+                return this.$grid.find(".cell[data-column-label=" + columnLabel + "]");
+            }, this);
+
+            this.boxes = _.flatten(
+                ["abc", "def", "ghi"].map(function (rowLabels) {
+                    var $band = this.$grid.find(".cell").filter(function (i, cell) {
+                        return _(rowLabels).contains($(cell).attr("data-row-label"));
                     });
-                });
-            }, this), true);
+                    return ["123", "456", "789"].map(function (columnLabels) {
+                        return $band.filter(function (i, cell) {
+                            return _(columnLabels).contains($(cell).attr("data-column-label"));
+                        });
+                    });
+                }, this)
+            );
 
             this.populateGrid();
             this.attachEvents();
