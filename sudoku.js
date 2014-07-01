@@ -140,14 +140,14 @@ $(document).ready(function () {
                     value = $(this).val();
                 if (event.keyCode === 37) {  // left
                     var cursorIsAtStart = this.selectionEnd === 0;
-                    if (value.length === 0 || cursorIsAtStart || $(this).is("[readonly]")) {
+                    if (_(value).isEmpty() || cursorIsAtStart || $(this).is("[readonly]")) {
                         $targetCell = $cell.prev();
                     }
                 } else if (event.keyCode === 38) {  // up
                     $targetCell = $row.prev().find(".cell[data-column-label=" + columnLabel + "]");
                 } else if (event.keyCode === 39) {  // right
                     var cursorIsAtEnd = this.selectionStart === value.length;
-                    if (value.length === 0 || cursorIsAtEnd || $(this).is("[readonly]")) {
+                    if (_(value).isEmpty() || cursorIsAtEnd || $(this).is("[readonly]")) {
                         $targetCell = $cell.next();
                     }
                 } else if (event.keyCode === 40) {  // down
@@ -219,7 +219,7 @@ $(document).ready(function () {
         isWin: function () {
             return _(this.getValues(this.$cells)).all(function (value) {
                 return /^[1-9]$/.test(value);
-            }) && this.findConflicts().length === 0;
+            }) && _(this.findConflicts()).isEmpty();
         },
 
         showWin: function () {
