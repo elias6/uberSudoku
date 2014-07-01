@@ -109,8 +109,12 @@ $(document).ready(function () {
         },
 
         getCell: function (cellLabel) {
+            return this.getCells([cellLabel]);
+        },
+
+        getCells: function (cellLabels) {
             return this.$cells.filter(function (i, cell) {
-                return $(cell).attr("data-cell-label") === cellLabel;
+                return _(cellLabels).contains($(cell).attr("data-cell-label"));
             });
         },
 
@@ -182,9 +186,7 @@ $(document).ready(function () {
                     _(COLUMN_CELL_LABEL_HASH).values(),
                     ALL_BOX_CELL_LABELS);
             scopes.forEach(function (scope) {
-                var $scopeCells = plugin.$cells.filter(function (i, cell) {
-                        return _(scope).contains($(cell).attr("data-cell-label"));
-                    }),
+                var $scopeCells = plugin.getCells(scope),
                     scopeDigits = plugin.getValues($scopeCells).filter(function (i, value) {
                         return /^[1-9]$/.test(value);
                     }),
@@ -203,10 +205,7 @@ $(document).ready(function () {
             if (digit === "") {
                 return true;
             } else if (/^[1-9]$/.test(digit)) {
-                var $peers = this.$cells.filter(function (i, cell) {
-                        return _(PEER_CELL_LABEL_HASH[cellLabel])
-                            .contains($(cell).attr("data-cell-label"));
-                    });
+                var $peers = this.getCells(PEER_CELL_LABEL_HASH[cellLabel]);
                 return _($peers.find("input")).all(function (input) {
                     return $(input).val() !== digit.toString();
                 });
