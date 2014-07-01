@@ -199,18 +199,11 @@ $(document).ready(function () {
             if (digit === "") {
                 return true;
             } else if (/^[1-9]$/.test(digit)) {
-                var $cell = this.getCell(cellLabel),
-                    $row = _(this.rows).find(function ($r) {
-                        return $r.is($cell);
-                    }),
-                    $column = _(this.columns).find(function ($c) {
-                        return $c.is($cell);
-                    }),
-                    $box = _(this.boxes).find(function ($b) {
-                        return $b.is($cell);
-                    }),
-                    $inputsInScopes = $row.add($column).add($box).not($cell).find("input");
-                return _($inputsInScopes).all(function (input) {
+                var $peers = this.$cells.filter(function (i, cell) {
+                        return _(PEER_CELL_LABELS[cellLabel])
+                            .contains($(cell).attr("data-cell-label"));
+                    });
+                return _($peers.find("input")).all(function (input) {
                     return $(input).val() !== digit.toString();
                 });
             } else {
