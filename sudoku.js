@@ -92,7 +92,7 @@ $(document).ready(function () {
             });
         },
 
-        getInitialDigitHash: function () {
+        getGivenDigitHash: function () {
             return _.object(
                 _(this.$cells.has("input[readonly]")).map(function (cell) {
                     return [$(cell).attr("data-cell-label"), $(cell).find("input").val()];
