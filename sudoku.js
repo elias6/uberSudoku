@@ -199,13 +199,15 @@ $(document).ready(function () {
             return result;
         },
 
-        moveIsValid: function (cellLabel, digit) {
+        moveIsValid: function (cellLabel, digit, digitHash) {
+            if (_(digitHash).isUndefined()) {
+                digitHash = this.getDigitHash();
+            }
             if (digit === "") {
                 return true;
             } else if (/^[1-9]$/.test(digit)) {
-                var $peers = this.getCells(PEER_CELL_LABEL_HASH[cellLabel]);
-                return _($peers.find("input")).all(function (input) {
-                    return $(input).val() !== digit.toString();
+                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
+                    return +digitHash[otherCellLabel] !== +digit;
                 });
             } else {
                 return false;
