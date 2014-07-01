@@ -176,19 +176,23 @@ $(document).ready(function () {
 
         findConflicts: function () {
             var result = $(),
-                plugin = this;
-
-            var $scopes = $(this.rows).add(this.columns).add(this.boxes);
-            $scopes.each(function (i, scope) {
-                var scopeValues = plugin.getValues(scope),
-                    scopeDigits = scopeValues.filter(function (j, value) {
+                plugin = this,
+                scopes = _.union(
+                    _(ROW_CELL_LABEL_HASH).values(),
+                    _(COLUMN_CELL_LABEL_HASH).values(),
+                    ALL_BOX_CELL_LABELS);
+            scopes.forEach(function (scope) {
+                var $scopeCells = plugin.$cells.filter(function (i, cell) {
+                        return _(scope).contains($(cell).attr("data-cell-label"));
+                    }),
+                    scopeDigits = plugin.getValues($scopeCells).filter(function (i, value) {
                         return /^[1-9]$/.test(value);
                     }),
                     counter = _(scopeDigits).countBy(),
                     duplicateDigits = Object.keys(counter).filter(function (digit) {
                         return counter[digit] > 1;
                     });
-                result = result.add($(scope).filter(function (j, cell) {
+                result = result.add($scopeCells.filter(function (i, cell) {
                     return _(duplicateDigits).contains($(cell).find("input").val());
                 }));
             });
