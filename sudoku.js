@@ -2,8 +2,6 @@
 
 $(document).ready(function () {
     $(".sudokuContainer").uberSudoku();
-
-    window.plugin = $(".sudokuContainer").data("plugin_uberSudoku");
 });
 
 (function ($, undefined) {
