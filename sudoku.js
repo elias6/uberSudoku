@@ -110,24 +110,26 @@ $(document).ready(function () {
 
         populateGrid: function (digitHash) {
             this.$cells.find("input").val("").removeAttr("readonly");
-            if (digitHash) {
-                _(digitHash).each(function (digit, cellLabel) {
-                    if (/^[1-9]$/.test(digit)) {
-                        this.getCell(cellLabel).find("input").val(digit).attr("readonly", true);
-                    }
-                }, this);
-            } else {
-                var givenCount = 0;
-                while (givenCount < 20) {
-                    var digit = _.random(1, 9),
-                        cellLabel = _.sample(ALL_ROW_LABELS) + _.sample(ALL_COLUMN_LABELS),
-                        $input = this.getCell(cellLabel).find("input");
-                    if ($input.val() === "" && this.moveIsValid(cellLabel, digit)) {
-                        $input.val(digit).attr("readonly", true)
-                        givenCount++;
-                    }
+            if (_.isUndefined(digitHash)) {
+                digitHash = this.generateRandomDigitHash();
+            }
+            _(digitHash).each(function (digit, cellLabel) {
+                if (/^[1-9]$/.test(digit)) {
+                    this.getCell(cellLabel).find("input").val(digit).attr("readonly", true);
+                }
+            }, this);
+        },
+
+        generateRandomDigitHash: function () {
+            var result = {};
+            while (_(result).size() < 20) {
+                var digit = _.random(1, 9),
+                    cellLabel = _.sample(_(ALL_CELL_LABELS).difference(Object.keys(result)));
+                if (this.moveIsValid(cellLabel, digit, result)) {
+                    result[cellLabel] = digit;
                 }
             }
+            return result;
         },
 
         attachEvents: function () {
