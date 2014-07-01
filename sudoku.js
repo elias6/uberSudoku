@@ -10,32 +10,77 @@ $(document).ready(function () {
         this.init();
     }
 
+    var ALL_ROW_LABELS = ["a", "b", "c", "d", "e", "f", "g", "h", "i"],
+        ALL_COLUMN_LABELS = ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+        ALL_CELL_LABELS = _.flatten(
+            ALL_ROW_LABELS.map(function (rowLabel) {
+                return ALL_COLUMN_LABELS.map(function (columnLabel) {
+                    return rowLabel + columnLabel;
+                });
+            })
+        ),
+        ROW_CELL_LABELS = _.object(ALL_ROW_LABELS.map(function (rowLabel) {
+            return [
+                rowLabel,
+                ALL_COLUMN_LABELS.map(function (columnLabel) {
+                    return rowLabel + columnLabel;
+                })
+            ];
+        })),
+        COLUMN_CELL_LABELS = _.object(ALL_COLUMN_LABELS.map(function (columnLabel) {
+            return [
+                columnLabel,
+                ALL_ROW_LABELS.map(function (rowLabel) {
+                    return rowLabel + columnLabel;
+                })
+            ];
+        })),
+        BOX_CELL_LABELS = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
+            var rowLabel = cellLabel.charAt(0),
+                columnLabel = cellLabel.charAt(1),
+                bandRowPos = 3 * Math.floor(ALL_ROW_LABELS.indexOf(rowLabel) / 3),
+                bandRowLabels = ALL_ROW_LABELS.slice(bandRowPos, bandRowPos + 3),
+                stackColumnPos = 3 * Math.floor(ALL_COLUMN_LABELS.indexOf(columnLabel) / 3),
+                stackColumnLabels = ALL_COLUMN_LABELS.slice(stackColumnPos, stackColumnPos + 3),
+                boxCellLabels = _.flatten(
+                    _(bandRowLabels).map(function (bandRowLabel) {
+                        return _(stackColumnLabels).map(function (stackColumnLabel) {
+                            return bandRowLabel + stackColumnLabel;
+                        });
+                    })
+                );
+            boxCellLabels.sort();
+            return [cellLabel, boxCellLabels];
+        })),
+        ALL_BOX_CELL_LABELS = _.uniq(_.values(BOX_CELL_LABELS), JSON.stringify),
+        PEER_CELL_LABELS = _.object(ALL_CELL_LABELS.map(function (cellLabel) {
+            var peerLabels = _.union(
+                    ROW_CELL_LABELS[cellLabel.charAt(0)],
+                    COLUMN_CELL_LABELS[cellLabel.charAt(1)],
+                    BOX_CELL_LABELS[cellLabel]);
+            peerLabels.sort();
+            return [cellLabel, peerLabels];
+        }));
+
     $.extend(Plugin.prototype, {
         init: function () {
             this.$grid = this.createGrid();
 
             this.$cells = this.$grid.find(".cell");
 
-            this.rows = _("abcdefghi").map(function (rowLabel) {
+            this.rows = ALL_ROW_LABELS.map(function (rowLabel) {
                 return this.$cells.filter("[data-row-label=" + rowLabel + "]");
             }, this);
 
-            this.columns = _.range(1, 10).map(function (columnLabel) {
+            this.columns = ALL_COLUMN_LABELS.map(function (columnLabel) {
                 return this.$cells.filter("[data-column-label=" + columnLabel + "]");
             }, this);
 
-            this.boxes = _.flatten(
-                ["abc", "def", "ghi"].map(function (rowLabels) {
-                    var $band = this.$cells.filter(function (i, cell) {
-                        return _(rowLabels).contains($(cell).attr("data-row-label"));
-                    });
-                    return ["123", "456", "789"].map(function (columnLabels) {
-                        return $band.filter(function (i, cell) {
-                            return _(columnLabels).contains($(cell).attr("data-column-label"));
-                        });
-                    });
-                }, this)
-            );
+            this.boxes = ALL_BOX_CELL_LABELS.map(function (boxCellLabels) {
+                return this.$cells.filter(function (i, cell) {
+                    return _(boxCellLabels).contains($(cell).attr("data-cell-label"));
+                });
+            }, this);
 
             this.populateGrid();
             this.attachEvents();
@@ -47,12 +92,10 @@ $(document).ready(function () {
 
             var $grid = $("<table class='grid' />");
 
-            _(9).times(function (i) {
-                var rowLabel = 'abcdefghi'[i],
-                    $row = $("<tr />").appendTo($grid);
-                _(9).times(function (j) {
-                    var columnLabel = j + 1,
-                        $cell = $("<td />", {
+            ALL_ROW_LABELS.forEach(function (rowLabel) {
+                var $row = $("<tr />").appendTo($grid);
+                ALL_COLUMN_LABELS.forEach(function (columnLabel) {
+                    var $cell = $("<td />", {
                             "class": "cell",
                             "data-row-label": rowLabel,
                             "data-column-label": columnLabel,
@@ -76,7 +119,7 @@ $(document).ready(function () {
             var givenCount = 0;
             while (givenCount < 20) {
                 var digit = _.random(1, 9),
-                    cellLabel = _.sample("abcdefghi") + _.random(1, 9),
+                    cellLabel = _.sample(ALL_ROW_LABELS) + _.sample(ALL_COLUMN_LABELS),
                     $input = this.getCell(cellLabel).find("input");
                 if ($input.val() === "" && this.moveIsValid(cellLabel, digit)) {
                     $input.val(digit).attr("readonly", true)
