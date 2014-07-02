@@ -230,6 +230,19 @@ $(document).ready(function () {
 
         showWin: function () {
             alert("Congratulations!");
+        },
+
+        test: function () {
+            var easyPuzzleDigitHash = {
+                    a3: 3, a5: 2, a7: 6, b1: 9, b4: 3, b6: 5, b9: 1, c3: 1, c4: 8, c6: 6, c7: 4,
+                    d3: 8, d4: 1, d6: 2, d7: 9, e1: 7, e9: 8, f3: 6, f4: 7, f6: 8, f7: 2, g3: 2,
+                    g4: 6, g6: 9, g7: 5, h1: 8, h4: 2, h6: 3, h9: 9, i3: 5, i5: 1, i7: 3 },
+                hardPuzzleDigitHash = {
+                    a8: 1, a9: 2, b5: 3, b6: 5, c4: 6, c8: 7, d1: 7, d7: 3, e4: 4, e7: 8, f1: 1,
+                    g4: 1, g5: 2, h2: 8, h8: 4, i2: 5, i7: 6},
+                plugin = $(".sudokuContainer").data("plugin_uberSudoku");
+            plugin.populateGrid(easyPuzzleDigitHash);
+            console.log(plugin.solve());
         }
     });
 
