@@ -7,6 +7,7 @@ screen and (max--moz-device-pixel-ratio: 2) {
 }
 body {
     background-image: url("handmadepaper.png");
+    margin: 0;
 }
 h1 {
     background: #ffffcc;
