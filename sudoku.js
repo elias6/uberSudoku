@@ -74,7 +74,7 @@ $(document).ready(function () {
                             "data-row-label": rowLabel,
                             "data-column-label": columnLabel,
                             "data-cell-label": rowLabel + columnLabel});
-                    $cell.append("<input type='text' maxlength='5' pattern='[0-9]*' />");
+                    $cell.append("<input type='number' min='1' max='9' step='1' />");
                     $row.append($cell);
                 });
             });
