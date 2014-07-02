@@ -342,6 +342,12 @@ $(document).ready(function () {
             return result;
         },
 
+        applySolution: function (solution) {
+            _(solution).each(function (digit, cellLabel) {
+                this.getCell(cellLabel).find("input:not([readonly])").val(digit).trigger("input");
+            }, this);
+        },
+
         test: function () {
             var easyPuzzleDigitHash = {
                     a3: 3, a5: 2, a7: 6, b1: 9, b4: 3, b6: 5, b9: 1, c3: 1, c4: 8, c6: 6, c7: 4,
@@ -358,7 +364,7 @@ $(document).ready(function () {
                     f4: 1, f8: 3, g3: 1, g8: 6, g9: 8, h3: 8, h4: 5, h8: 1, i2: 9, i7: 4},
                 plugin = $(".sudokuContainer").data("plugin_uberSudoku");
             plugin.populateGrid(harderPuzzleDigitHash);
-            console.log(plugin.solve());
+            plugin.applySolution(plugin.solve());
         }
     });
 
