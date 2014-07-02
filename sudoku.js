@@ -114,15 +114,17 @@ $(document).ready(function () {
         },
 
         populateGrid: function (digitHash) {
-            this.$cells.find("input").val("").removeAttr("readonly");
             if (_.isUndefined(digitHash)) {
                 digitHash = this.generateRandomDigitHash();
             }
-            _(digitHash).each(function (digit, cellLabel) {
+            _(this.$cells).each(function (cell) {
+                var digit = digitHash[$(cell).attr("data-cell-label")];
                 if (isSudokuDigit(digit)) {
-                    this.getCell(cellLabel).find("input").val(digit).attr("readonly", true);
+                    $(cell).find("input").val(digit).attr("readonly", true);
+                } else {
+                    $(cell).find("input").val("").removeAttr("readonly");
                 }
-            }, this);
+            });
         },
 
         generateRandomDigitHash: function () {
