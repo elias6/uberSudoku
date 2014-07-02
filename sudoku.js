@@ -82,13 +82,28 @@ $(document).ready(function () {
             ));
 
             this.$cells = this.$grid.find(".cell");
-            this.populateGrid(this.generateRandomDigitHash(2));
             $(this.element).append(this.$grid);
             this.$winPopup = $(
                 "<div class='winPopup popup'>" +
                     "<p>Congratulations!<p>" +
                     "<button type='button' class='closeButton'>Close</button>" +
                 "</div>").appendTo(this.element);
+            this.$difficultyPopup = $(
+                _.template(
+                    "<div class='difficultyPopup popup'>" +
+                        "<h2>Select difficulty</h2>" +
+                        "<% _(difficulties).each(function (difficulty, i) { %>" +
+                            "<div>" +
+                                "<button type='button' class='closeButton' " +
+                                    "data-difficulty='<%- i + 1 %>'>" +
+                                        "<%- difficulty %>" +
+                                "</button>" +
+                            "</div>" +
+                        "<% }); %>" +
+                    "</div>"                    
+                , {difficulties: ["Very easy", "Easy", "Medium", "Hard", "Insane"]}
+            )).appendTo(this.element);
+            this.showPopup(this.$difficultyPopup);
             this.attachEvents();
         },
 
@@ -222,6 +237,10 @@ $(document).ready(function () {
 
             $(this.element).on("click", ".popup .closeButton", function () {
                 $(this).closest(".popup").hide();
+            });
+
+            $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
+                plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
             });
         },
 

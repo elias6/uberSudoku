@@ -19,6 +19,10 @@ h1 {
     text-align: center;
     text-shadow: rgba(0, 0, 0, 0.5) 2px 2px 5px;
 }
+h2 {
+    font-size: 25px;
+    margin: 0 0 10px;
+}
 .uberSudoku .grid {
     background: #ffffff;
     border: solid 5px #444444;
@@ -81,4 +85,9 @@ h1 {
     position: fixed;
     text-align: center;
     top: 50%;
+}
+.uberSudoku .difficultyPopup button {
+    font-size: 14px;
+    margin: 4px 0;
+    width: 100px;
 }
