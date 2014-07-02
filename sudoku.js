@@ -62,6 +62,10 @@ $(document).ready(function () {
             this.populateGrid(this.generateRandomDigitHash(2));
             this.attachEvents();
             $(this.element).append(this.$grid);
+            this.$winPopup = $("<div class='winPopup popup'>" +
+                "<p>Congratulations!<p>" +
+                "<button type='button' class='closeButton'>Close</button>" +
+            "</div>").appendTo(this.element);
         },
 
         createGrid: function () {
@@ -215,6 +219,10 @@ $(document).ready(function () {
             $grid.on("mousewheel", ".cell input", function (event) {
                 event.preventDefault();
             });
+
+            $(this.element).on("click", ".winPopup .closeButton", function () {
+                $(this).closest(".winPopup").hide();
+            });
         },
 
         getValues: function (cells) {
@@ -271,7 +279,7 @@ $(document).ready(function () {
         },
 
         showWin: function () {
-            alert("Congratulations!");
+            this.$winPopup.show();
         },
 
         solve: function (digitHash) {
