@@ -59,7 +59,7 @@ $(document).ready(function () {
 
             this.$cells = this.$grid.find(".cell");
 
-            this.populateGrid();
+            this.populateGrid(this.generateRandomDigitHash(2));
             this.attachEvents();
             $(this.element).append(this.$grid);
         },
@@ -117,9 +117,6 @@ $(document).ready(function () {
         },
 
         populateGrid: function (digitHash) {
-            if (_.isUndefined(digitHash)) {
-                digitHash = this.generateRandomDigitHash();
-            }
             _(this.$cells).each(function (cell) {
                 var digit = digitHash[$(cell).attr("data-cell-label")];
                 if (isSudokuDigit(digit)) {
@@ -130,14 +127,39 @@ $(document).ready(function () {
             });
         },
 
-        generateRandomDigitHash: function () {
-            var result = {};
-            while (_(result).size() < 20) {
-                var digit = _.random(1, 9),
-                    cellLabel = _.sample(ALL_CELL_LABELS);
-                if (! (cellLabel in result) && this.moveIsValid(cellLabel, digit, result)) {
-                    result[cellLabel] = digit;
-                }
+        generateRandomDigitHash: function (difficulty) {
+            // Difficulty should be an integer from 1 to 5 inclusively.
+            if (_(difficulty).isUndefined()) {
+                difficulty = 2;
+            }
+            var result;
+            while (true) {
+                result = {};
+                _(11).times(function () {
+                    var digit = _.random(1, 9).toString(),
+                        cellLabel = _.sample(ALL_CELL_LABELS);
+                    if (! (cellLabel in result) && this.moveIsValid(cellLabel, digit, result)) {
+                        result[cellLabel] = digit;
+                    }
+                }, this);
+                result = this.solve(result);
+                if (result) {
+                    break;
+                }                
+            }
+            var totalGivenTarget = [50, 42, 33, 29, 24][difficulty - 1],
+                minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1];
+            while (_(result).size() > totalGivenTarget) {
+                var cellLabel = _.sample(ALL_CELL_LABELS),
+                    row = ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
+                    column = COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
+                    rowGivenCount = _(row).intersection(Object.keys(result)).length,
+                    columnGivenCount = _(column).intersection(Object.keys(result)).length,
+                    okToDeleteCell = rowGivenCount >= minGivensPerRowOrColumn &&
+                        columnGivenCount >= minGivensPerRowOrColumn;
+                if (okToDeleteCell) {
+                    delete result[cellLabel];
+                }                    
             }
             return result;
         },
