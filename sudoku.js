@@ -180,7 +180,7 @@ $(document).ready(function () {
         },
 
         getValues: function (cells) {
-            return $(cells).map(function (i, cell) {
+            return _(cells).map(function (cell) {
                 return $(cell).find("input").val();
             });
         },
@@ -194,7 +194,7 @@ $(document).ready(function () {
                     ALL_BOX_CELL_LABELS);
             scopes.forEach(function (scope) {
                 var $scopeCells = plugin.getCells(scope),
-                    scopeDigits = plugin.getValues($scopeCells).filter(function (i, value) {
+                    scopeDigits = plugin.getValues($scopeCells).filter(function (value) {
                         return /^[1-9]$/.test(value);
                     }),
                     counter = _(scopeDigits).countBy(),
