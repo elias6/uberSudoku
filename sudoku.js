@@ -225,7 +225,7 @@ $(document).ready(function () {
         isWin: function () {
             return _(this.getValues(this.$cells)).all(function (value) {
                 return /^[1-9]$/.test(value);
-            }) && _(this.findConflicts()).isEmpty();
+            }) && this.findConflicts().length === 0;
         },
 
         showWin: function () {
