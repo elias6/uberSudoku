@@ -55,23 +55,13 @@ $(document).ready(function () {
 
     $.extend(Plugin.prototype, {
         init: function () {
-            this.$grid = this.createGrid();
-
-            this.$cells = this.$grid.find(".cell");
-
-            this.populateGrid(this.generateRandomDigitHash(2));
-            this.attachEvents();
-            $(this.element).append(this.$grid);
-            this.$winPopup = $("<div class='winPopup popup'>" +
-                "<p>Congratulations!<p>" +
-                "<button type='button' class='closeButton'>Close</button>" +
-            "</div>").appendTo(this.element);
+            this.initGame();
         },
 
-        createGrid: function () {
+        initGame: function () {
             $(this.element).empty().addClass("uberSudoku");
 
-            return $(
+            this.$grid = $(
                 _.template(
                     "<table class='grid'>" +
                         "<% ALL_ROW_LABELS.forEach(function (rowLabel) { %>" +
@@ -90,6 +80,15 @@ $(document).ready(function () {
                     "</table>",
                     {ALL_ROW_LABELS: ALL_ROW_LABELS, ALL_COLUMN_LABELS: ALL_COLUMN_LABELS}
             ));
+
+            this.$cells = this.$grid.find(".cell");
+            this.populateGrid(this.generateRandomDigitHash(2));
+            $(this.element).append(this.$grid);
+            this.$winPopup = $("<div class='winPopup popup'>" +
+                "<p>Congratulations!<p>" +
+                "<button type='button' class='closeButton'>Close</button>" +
+            "</div>").appendTo(this.element);
+            this.attachEvents();
         },
 
         getCell: function (cellLabel) {
