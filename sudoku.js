@@ -173,6 +173,10 @@ $(document).ready(function () {
                 this.setCustomValidity(" ");    // Disable Firefox's ugly validation
                 $(this).parent().toggleClass("pencil", $(this).val().length > 1);
             });
+
+            $grid.on("mousewheel", ".cell input", function (event) {
+                event.preventDefault();
+            });
         },
 
         getValues: function (cells) {
