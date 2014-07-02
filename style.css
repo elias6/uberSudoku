@@ -1,3 +1,13 @@
+@media screen and (-webkit-min-device-pixel-ratio: 2),
+screen and (max--moz-device-pixel-ratio: 2) {
+    body {
+        background-image: url("handmadepaper_@2X.png");
+        background-size: 100px 100px;
+    }
+}
+body {
+    background-image: url("handmadepaper.png");
+}
 h1 {
     background: #ffffcc;
     font-family: Helvetica, Arial, sans-serif;
@@ -8,8 +18,10 @@ h1 {
     text-shadow: rgba(0, 0, 0, 0.5) 2px 2px 5px;
 }
 .uberSudoku .grid {
+    background: #ffffff;
     border: solid 5px #444444;
     border-collapse: collapse;
+    box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 5px;
     margin: 0 auto;
     text-align: center;
 }
