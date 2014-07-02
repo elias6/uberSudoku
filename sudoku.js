@@ -333,7 +333,13 @@ $(document).ready(function () {
                 return solution;
             }
 
-            return search(findPossibleDigits(this.getGivenDigitHash()));
+            var result = search(findPossibleDigits(this.getGivenDigitHash()));
+            if (_(result).isObject()) {
+                _(result).each(function (digits, cellLabel) {
+                    result[cellLabel] = digits[0];
+                });
+            }
+            return result;
         },
 
         test: function () {
