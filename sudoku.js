@@ -148,13 +148,15 @@ $(document).ready(function () {
                             $targetCell = $cell.prev();
                         }
                     } else if (event.keyCode === 38) {  // up
-                        $targetCell = $row.prev().find(".cell[data-column-label=" + columnLabel + "]");
+                        $targetCell = $row.prev()
+                            .find(".cell[data-column-label=" + columnLabel + "]");
                     } else if (event.keyCode === 39) {  // right
                         if (_(value).isEmpty() || $(this).is("[readonly]")) {
                             $targetCell = $cell.next();
                         }
                     } else if (event.keyCode === 40) {  // down
-                        $targetCell = $row.next().find(".cell[data-column-label=" + columnLabel + "]");
+                        $targetCell = $row.next()
+                            .find(".cell[data-column-label=" + columnLabel + "]");
                     }
                     $targetCell.find("input").focus().select();
                     event.preventDefault();
