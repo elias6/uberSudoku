@@ -336,9 +336,8 @@ $(document).ready(function () {
                         return possibleDigits[cellLabel].length;
                     }),
                     solution = false;
-                possibleDigits[bestUncertainCell].every(function (digit) {
+                _(possibleDigits[bestUncertainCell]).shuffle().every(function (digit) {
                     var possibleDigitsCopy = $.extend(true, {}, possibleDigits);
-                    // TODO: iterate over digits in random order to help generate random puzzles.
                     possibleDigitsCopy = assignDigit(possibleDigitsCopy, bestUncertainCell, digit);
                     solution = search(possibleDigitsCopy);
                     return ! solution;    // break only if a solution is found
