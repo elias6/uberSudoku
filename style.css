@@ -86,14 +86,21 @@ h2 {
     text-align: center;
     top: 50%;
 }
-.uberSudoku .difficultyPopup button {
+.uberSudoku button {
     background: #0033aa;
     border-color: #004cff;
     border-radius: 8px;
     color: #dddddd;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     margin: 6px 0;
     padding: 2px 0;
+}
+.uberSudoku .difficultyPopup button {
+    font-size: 16px;
     width: 100px;
+}
+.uberSudoku .newGameContainer {
+    margin: 0 50px 0 0;
+    text-align: right;
 }

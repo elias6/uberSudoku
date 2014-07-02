@@ -103,8 +103,13 @@ $(document).ready(function () {
                     "</div>"                    
                 , {difficulties: ["Very easy", "Easy", "Medium", "Hard", "Insane"]}
             )).appendTo(this.element);
-            this.showPopup(this.$difficultyPopup);
+            $(this.element).append(
+                "<div class='newGameContainer'>" +
+                    "<button type='button' class='newGameButton'>New game</button>" +
+                "</div>"
+            );
             this.attachEvents();
+            $(this.element).find(".newGameButton").click();
         },
 
         getCell: function (cellLabel) {
@@ -237,6 +242,10 @@ $(document).ready(function () {
 
             $(this.element).on("click", ".popup .closeButton", function () {
                 $(this).closest(".popup").hide();
+            });
+
+            $(this.element).on("click", ".newGameButton", function () {
+                plugin.showPopup(plugin.$difficultyPopup);
             });
 
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
