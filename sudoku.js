@@ -33,8 +33,8 @@ $(document).ready(function () {
                 stackColumnPos = 3 * Math.floor(ALL_COLUMN_LABELS.indexOf(columnLabel) / 3),
                 stackColumnLabels = ALL_COLUMN_LABELS.slice(stackColumnPos, stackColumnPos + 3),
                 boxCellLabels = _.flatten(
-                    _(bandRowLabels).map(function (bandRowLabel) {
-                        return _(stackColumnLabels).map(function (stackColumnLabel) {
+                    bandRowLabels.map(function (bandRowLabel) {
+                        return stackColumnLabels.map(function (stackColumnLabel) {
                             return bandRowLabel + stackColumnLabel;
                         });
                     })
