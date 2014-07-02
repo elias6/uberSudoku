@@ -84,10 +84,11 @@ $(document).ready(function () {
             this.$cells = this.$grid.find(".cell");
             this.populateGrid(this.generateRandomDigitHash(2));
             $(this.element).append(this.$grid);
-            this.$winPopup = $("<div class='winPopup popup'>" +
-                "<p>Congratulations!<p>" +
-                "<button type='button' class='closeButton'>Close</button>" +
-            "</div>").appendTo(this.element);
+            this.$winPopup = $(
+                "<div class='winPopup popup'>" +
+                    "<p>Congratulations!<p>" +
+                    "<button type='button' class='closeButton'>Close</button>" +
+                "</div>").appendTo(this.element);
             this.attachEvents();
         },
 
