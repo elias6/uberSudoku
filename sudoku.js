@@ -252,7 +252,7 @@ $(document).ready(function () {
             alert("Congratulations!");
         },
 
-        solve: function () {
+        solve: function (digitHash) {
             function findPossibleDigits(digitHash) {
                 var possibleDigits = {};
                 ALL_CELL_LABELS.forEach(function (cellLabel) {
@@ -345,7 +345,10 @@ $(document).ready(function () {
                 return solution;
             }
 
-            var result = search(findPossibleDigits(this.getGivenDigitHash()));
+            if (_(digitHash).isUndefined()) {
+                digitHash = this.getGivenDigitHash();
+            }
+            var result = search(findPossibleDigits(digitHash));
             if (_(result).isObject()) {
                 _(result).each(function (digits, cellLabel) {
                     result[cellLabel] = digits[0];
