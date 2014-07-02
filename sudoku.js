@@ -219,8 +219,8 @@ $(document).ready(function () {
                 event.preventDefault();
             });
 
-            $(this.element).on("click", ".winPopup .closeButton", function () {
-                $(this).closest(".winPopup").hide();
+            $(this.element).on("click", ".popup .closeButton", function () {
+                $(this).closest(".popup").hide();
             });
         },
 
