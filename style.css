@@ -10,10 +10,11 @@ body {
 }
 h1 {
     background: #ffffcc;
+    background: linear-gradient(to bottom, rgba(255, 255, 204, 1), rgba(255, 255, 204, 0));
     font-family: Helvetica, Arial, sans-serif;
     font-size: 32px;
-    margin: 0 0 5px;
-    padding: 5px;
+    margin: 0 0 -45px;
+    padding: 5px 0 50px;
     text-align: center;
     text-shadow: rgba(0, 0, 0, 0.5) 2px 2px 5px;
 }
