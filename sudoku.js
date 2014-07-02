@@ -242,6 +242,10 @@ $(document).ready(function () {
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
                 plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
             });
+
+            $(window).resize(function () {
+                plugin.positionPopup($(plugin.element).find(".popup:visible"));
+            });
         },
 
         getValues: function (cells) {
@@ -298,13 +302,17 @@ $(document).ready(function () {
         },
 
         showPopup: function (popup) {
+            this.positionPopup(popup);
+            $(popup).show();
+        },
+
+        positionPopup: function (popup) {
             $(popup).css({
                 top: Math.max(
                     0, ($(window).height() - $(popup).outerHeight()) / 2 + $(window).scrollTop()) +
                     "px",
                 left: Math.max(0, ($(window).width() - $(popup).outerWidth()) / 2) + "px"
-
-            }).show();
+            });
         },
 
         showWin: function () {
