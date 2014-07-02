@@ -91,6 +91,9 @@ $(document).ready(function () {
             this.$difficultyPopup = $(
                 _.template(
                     "<div class='difficultyPopup popup'>" +
+                        "<div class='xContainer'>" +
+                            "<button type='button' class='x closeButton'>X</button>" +
+                        "</div>" +
                         "<h2>Select difficulty</h2>" +
                         "<% _(difficulties).each(function (difficulty, i) { %>" +
                             "<div>" +

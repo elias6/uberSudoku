@@ -96,9 +96,20 @@ h2 {
     margin: 6px 0;
     padding: 2px 0;
 }
+.uberSudoku .difficultyPopup {
+    width: 225px;
+}
 .uberSudoku .difficultyPopup button {
     font-size: 16px;
     width: 100px;
+}
+.uberSudoku .difficultyPopup .xContainer {
+    text-align: right;
+    margin: 0 0 -25px;
+}
+.uberSudoku .difficultyPopup .xContainer .closeButton {
+    width: auto;
+    font-size: 12px;
 }
 .uberSudoku .newGameContainer {
     margin: 0 50px 0 0;
