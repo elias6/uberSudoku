@@ -249,6 +249,7 @@ $(document).ready(function () {
                 plugin = $(".sudokuContainer").data("plugin_uberSudoku");
             plugin.populateGrid(harderPuzzleDigitHash);
             plugin.solve();
+            console.log(plugin.solve());
         }
     });
 
