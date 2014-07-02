@@ -167,7 +167,7 @@ $(document).ready(function () {
                 if (plugin.isWin()) {
                     plugin.showWin();
                 }
-                this.setCustomValidity(" ");
+                this.setCustomValidity(" ");    // Disable Firefox's ugly validation
                 $(this).parent().toggleClass("pencil", $(this).val().length > 1);
             });
         },
