@@ -197,9 +197,7 @@ $(document).ready(function () {
                     ALL_BOX_CELL_LABELS);
             scopes.forEach(function (scope) {
                 var $scopeCells = plugin.getCells(scope),
-                    scopeDigits = plugin.getValues($scopeCells).filter(function (value) {
-                        return isSudokuDigit(value);
-                    }),
+                    scopeDigits = plugin.getValues($scopeCells).filter(isSudokuDigit),
                     counter = _(scopeDigits).countBy(),
                     duplicateDigits = Object.keys(counter).filter(function (digit) {
                         return counter[digit] > 1;
@@ -233,9 +231,8 @@ $(document).ready(function () {
         },
 
         isWin: function () {
-            return _(this.getValues(this.$cells)).all(function (value) {
-                return isSudokuDigit(value);
-            }) && this.findConflicts().length === 0;
+            return _(this.getValues(this.$cells)).all(isSudokuDigit) &&
+                this.findConflicts().length === 0;
         },
 
         showWin: function () {
