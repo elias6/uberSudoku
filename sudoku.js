@@ -131,8 +131,8 @@ $(document).ready(function () {
             var result = {};
             while (_(result).size() < 20) {
                 var digit = _.random(1, 9),
-                    cellLabel = _.sample(_(ALL_CELL_LABELS).difference(Object.keys(result)));
-                if (this.moveIsValid(cellLabel, digit, result)) {
+                    cellLabel = _.sample(ALL_CELL_LABELS);
+                if (! (cellLabel in result) && this.moveIsValid(cellLabel, digit, result)) {
                     result[cellLabel] = digit;
                 }
             }
