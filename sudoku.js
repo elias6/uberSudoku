@@ -296,14 +296,11 @@ $(document).ready(function () {
                         return _(possibleDigits[otherCellLabel]).contains(digit);
                     });
                     if (_(possibleCellLabels).isEmpty()) {
-                        // No possible cells for this digit. Puzzle is unsolvable. Break.
                         possibleDigits = false;
-                        return false;
                     } else if (possibleCellLabels.length === 1) {
                         possibleDigits = assignDigit(possibleDigits, possibleCellLabels[0], digit);
-                        // If no possible digits for any cell, puzzle is unsolvable, so break.
-                        return possibleDigits;
                     }
+                    // If no possible cells for this digit, puzzle is unsolvable so break.
                     return possibleDigits;
                 });
                 return possibleDigits;
