@@ -48,7 +48,10 @@ $(document).ready(function () {
                     COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
                     BOX_CELL_LABEL_HASH[cellLabel]);
             return [cellLabel, peerLabels.sort()];
-        }));
+        })),
+        isSudokuDigit = function (digit) {
+            return /^[1-9]$/.test(digit);
+        };
 
     $.extend(Plugin.prototype, {
         init: function () {
@@ -114,7 +117,7 @@ $(document).ready(function () {
                 digitHash = this.generateRandomDigitHash();
             }
             _(digitHash).each(function (digit, cellLabel) {
-                if (/^[1-9]$/.test(digit)) {
+                if (isSudokuDigit(digit)) {
                     this.getCell(cellLabel).find("input").val(digit).attr("readonly", true);
                 }
             }, this);
@@ -195,7 +198,7 @@ $(document).ready(function () {
             scopes.forEach(function (scope) {
                 var $scopeCells = plugin.getCells(scope),
                     scopeDigits = plugin.getValues($scopeCells).filter(function (value) {
-                        return /^[1-9]$/.test(value);
+                        return isSudokuDigit(value);
                     }),
                     counter = _(scopeDigits).countBy(),
                     duplicateDigits = Object.keys(counter).filter(function (digit) {
@@ -214,7 +217,7 @@ $(document).ready(function () {
             }
             if (digit === "") {
                 return true;
-            } else if (/^[1-9]$/.test(digit)) {
+            } else if (isSudokuDigit(digit)) {
                 return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
                     return +digitHash[otherCellLabel] !== +digit;
                 });
@@ -231,7 +234,7 @@ $(document).ready(function () {
 
         isWin: function () {
             return _(this.getValues(this.$cells)).all(function (value) {
-                return /^[1-9]$/.test(value);
+                return isSudokuDigit(value);
             }) && this.findConflicts().length === 0;
         },
 
@@ -248,7 +251,7 @@ $(document).ready(function () {
                     });
                 });
                 _(digitHash).every(function (digit, cellLabel) {
-                    if (/^[1-9]$/.test(digit)) {
+                    if (isSudokuDigit(digit)) {
                         possibleDigits = assignDigit(possibleDigits, cellLabel, digit);
                     }
                     // If no possible digits for any cell, puzzle is unsolvable, so break.
