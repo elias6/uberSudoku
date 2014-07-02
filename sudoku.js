@@ -240,8 +240,11 @@ $(document).ready(function () {
                 hardPuzzleDigitHash = {
                     a8: 1, a9: 2, b5: 3, b6: 5, c4: 6, c8: 7, d1: 7, d7: 3, e4: 4, e7: 8, f1: 1,
                     g4: 1, g5: 2, h2: 8, h8: 4, i2: 5, i7: 6},
+                worldsHardestPuzzleDigitHash = {
+                    a1: 8, b3: 3, b4: 6, c2: 7, c5: 9, c7: 2, d2: 5, d6: 7, e5: 4, e6: 5, e7: 7,
+                    f4: 1, f8: 3, g3: 1, g8: 6, g9: 8, h3: 8, h4: 5, h8: 1, i2: 9, i7: 4},
                 plugin = $(".sudokuContainer").data("plugin_uberSudoku");
-            plugin.populateGrid(easyPuzzleDigitHash);
+            plugin.populateGrid(worldsHardestPuzzleDigitHash);
             console.log(plugin.solve());
         }
     });
