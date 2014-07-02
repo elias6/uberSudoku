@@ -308,9 +308,7 @@ $(document).ready(function () {
 
         positionPopup: function (popup) {
             $(popup).css({
-                top: Math.max(
-                    0, ($(window).height() - $(popup).outerHeight()) / 2 + $(window).scrollTop()) +
-                    "px",
+                top: Math.max(0, ($(window).height() - $(popup).outerHeight()) * 0.2) + "px",
                 left: Math.max(0, ($(window).width() - $(popup).outerWidth()) / 2) + "px"
             });
         },
