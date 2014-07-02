@@ -67,22 +67,25 @@ $(document).ready(function () {
         createGrid: function () {
             $(this.element).empty().addClass("uberSudoku");
 
-            var $grid = $("<table class='grid' />");
-
-            ALL_ROW_LABELS.forEach(function (rowLabel) {
-                var $row = $("<tr />").appendTo($grid);
-                ALL_COLUMN_LABELS.forEach(function (columnLabel) {
-                    var $cell = $("<td />", {
-                            "class": "cell",
-                            "data-row-label": rowLabel,
-                            "data-column-label": columnLabel,
-                            "data-cell-label": rowLabel + columnLabel});
-                    $cell.append("<input type='number' min='1' max='9' step='1' />");
-                    $row.append($cell);
-                });
-            });
-
-            return $grid;
+            return $(
+                _.template(
+                    "<table class='grid'>" +
+                        "<% ALL_ROW_LABELS.forEach(function (rowLabel) { %>" +
+                            "<tr>" +
+                                "<% ALL_COLUMN_LABELS.forEach(function (columnLabel) { %>" +
+                                    "<td " +
+                                        "class='cell' " +
+                                        "data-row-label='<%- rowLabel %>' " +
+                                        "data-column-label='<%- columnLabel %>' " +
+                                        "data-cell-label='<%- rowLabel %><%- columnLabel %>'>" +
+                                            "<input type='number' min='1' max='9' step='1' />" +
+                                    "</td>" +
+                                "<% }); %>" +
+                            "</tr>" +
+                        "<% }); %>" +
+                    "</table>",
+                    {ALL_ROW_LABELS: ALL_ROW_LABELS, ALL_COLUMN_LABELS: ALL_COLUMN_LABELS}
+            ));
         },
 
         getCell: function (cellLabel) {
