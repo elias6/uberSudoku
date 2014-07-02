@@ -86,7 +86,9 @@ $(document).ready(function () {
         },
 
         getCell: function (cellLabel) {
-            return this.getCells([cellLabel]);
+            return $(_(this.$cells).find(function (cell) {
+                return $(cell).attr("data-cell-label") === cellLabel;
+            }));
         },
 
         getCells: function (cellLabels) {
@@ -166,15 +168,21 @@ $(document).ready(function () {
                 }
             });
 
-            $grid.on("input", ".cell input", function (event) {
-                var fontEms = ([1, 1, 0.9, 0.6, 0.5, 0.4][$(this).val().length] || 0.4);
-                $(this).css("font-size", fontEms + "em");
+            $grid.on("input.updateConflicts", ".cell input", function () {
                 plugin.updateConflicts();
+            });
+
+            $grid.on("input.showWin", ".cell input", function () {
                 if (plugin.isWin()) {
                     plugin.showWin();
                 }
-                this.setCustomValidity(" ");    // Disable Firefox's ugly validation
+            });
+
+            $grid.on("input.other", ".cell input", function () {
+                var fontEms = ([1, 1, 0.9, 0.6, 0.5, 0.4][$(this).val().length] || 0.4);
+                $(this).css("font-size", fontEms + "em");
                 $(this).parent().toggleClass("pencil", $(this).val().length > 1);
+                this.setCustomValidity(" ");    // Disable Firefox's ugly validation
             });
 
             $grid.on("mousewheel", ".cell input", function (event) {
@@ -344,8 +352,10 @@ $(document).ready(function () {
 
         applySolution: function (solution) {
             _(solution).each(function (digit, cellLabel) {
-                this.getCell(cellLabel).find("input:not([readonly])").val(digit).trigger("input");
+                this.getCell(cellLabel).find("input:not([readonly])")
+                    .val(digit).trigger("input.other");
             }, this);
+            plugin.updateConflicts();
         },
 
         test: function () {
