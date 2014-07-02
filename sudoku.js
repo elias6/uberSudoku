@@ -306,7 +306,6 @@ $(document).ready(function () {
             }
 
             function search(possibleDigits) {
-                // WARNING: this function modifies possibleDigits
                 if (! possibleDigits) {
                     return false;    // Puzzle is unsolvable
                 }
