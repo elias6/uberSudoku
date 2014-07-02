@@ -232,6 +232,107 @@ $(document).ready(function () {
             alert("Congratulations!");
         },
 
+        solve: function () {
+            function findPossibleDigits(digitHash) {
+                var possibleDigits = {};
+                ALL_CELL_LABELS.forEach(function (cellLabel) {
+                    possibleDigits[cellLabel] = _.range(1, 10).map(function (digit) {
+                        return digit.toString();
+                    });
+                });
+                _(digitHash).every(function (digit, cellLabel) {
+                    if (/^[1-9]$/.test(digit)) {
+                        possibleDigits = assignDigit(possibleDigits, cellLabel, digit);
+                    }
+                    // If no possible digits for any cell, puzzle is unsolvable, so break.
+                    return possibleDigits;
+                });
+                return possibleDigits;
+            }
+
+            function assignDigit(possibleDigits, cellLabel, digit) {
+                // WARNING: this function modifies possibleDigits
+                _(possibleDigits[cellLabel]).without(digit).every(function (otherDigit) {
+                    possibleDigits = eliminateDigit(possibleDigits, cellLabel, otherDigit);
+                    // If no possible digits for any cell, puzzle is unsolvable, so break.
+                    return possibleDigits;
+                });
+                return possibleDigits;
+            }
+
+            function eliminateDigit(possibleDigits, cellLabel, digit) {
+                // WARNING: this function modifies possibleDigits
+                if (! _(possibleDigits[cellLabel]).contains(digit)) {
+                    return possibleDigits;
+                }
+                possibleDigits[cellLabel] = _(possibleDigits[cellLabel]).without(digit);
+                if (_(possibleDigits[cellLabel]).isEmpty()) {
+                    return false;    // Puzzle is unsolvable
+                } else if (possibleDigits[cellLabel].length === 1) {
+                    var peerLabels = _(PEER_CELL_LABEL_HASH[cellLabel]).without(cellLabel);
+                    peerLabels.every(function (peerLabel) {
+                        possibleDigits = eliminateDigit(possibleDigits, peerLabel,
+                            possibleDigits[cellLabel][0]);
+                        // If no possible digits for any cell, puzzle is unsolvable, so break.
+                        return possibleDigits;
+                    });
+                    if (! possibleDigits) {
+                        return false;    // Puzzle is unsolvable
+                    }
+                }
+                var rowLabel = cellLabel.charAt(0),
+                    columnLabel = cellLabel.charAt(1);
+                [ROW_CELL_LABEL_HASH[rowLabel],
+                    COLUMN_CELL_LABEL_HASH[columnLabel],
+                    BOX_CELL_LABEL_HASH[cellLabel]].every(function (scopeLabels) {
+                    var possibleCellLabels = scopeLabels.filter(function (otherCellLabel) {
+                        return _(possibleDigits[otherCellLabel]).contains(digit);
+                    });
+                    if (_(possibleCellLabels).isEmpty()) {
+                        // No possible cells for this digit. Puzzle is unsolvable. Break.
+                        possibleDigits = false;
+                        return false;
+                    } else if (possibleCellLabels.length === 1) {
+                        possibleDigits = assignDigit(possibleDigits, possibleCellLabels[0], digit);
+                        // If no possible digits for any cell, puzzle is unsolvable, so break.
+                        return possibleDigits;
+                    }
+                    return possibleDigits;
+                });
+                return possibleDigits;
+            }
+
+            function search(possibleDigits) {
+                // WARNING: this function modifies possibleDigits
+                if (! possibleDigits) {
+                    return false;    // Puzzle is unsolvable
+                }
+                var puzzleIsSolved = _(possibleDigits).all(function (digitsForCell, cellLabel) {
+                    return digitsForCell.length === 1;
+                });
+                if (puzzleIsSolved) {
+                    return possibleDigits;
+                }
+                var uncertainCells = ALL_CELL_LABELS.filter(function (cellLabel) {
+                        return possibleDigits[cellLabel].length > 1;
+                    }),
+                    bestUncertainCell = _(uncertainCells).min(function (cellLabel) {
+                        return possibleDigits[cellLabel].length;
+                    }),
+                    solution = false;
+                possibleDigits[bestUncertainCell].every(function (digit) {
+                    var possibleDigitsCopy = $.extend(true, {}, possibleDigits);
+                    // TODO: iterate over digits in random order to help generate random puzzles.
+                    possibleDigitsCopy = assignDigit(possibleDigitsCopy, bestUncertainCell, digit);
+                    solution = search(possibleDigitsCopy);
+                    return ! solution;    // break only if a solution is found
+                });
+                return solution;
+            }
+
+            return search(findPossibleDigits(this.getGivenDigitHash()));
+        },
+
         test: function () {
             var easyPuzzleDigitHash = {
                     a3: 3, a5: 2, a7: 6, b1: 9, b4: 3, b6: 5, b9: 1, c3: 1, c4: 8, c6: 6, c7: 4,
