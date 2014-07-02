@@ -82,9 +82,3 @@ h1 {
     text-align: center;
     top: 50%;
 }
-.uberSudoku .winPopup {
-    height: 100px;
-    margin-left: -125px;
-    margin-top: -50px;
-    width: 250px;
-}

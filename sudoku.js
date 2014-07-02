@@ -278,8 +278,18 @@ $(document).ready(function () {
                 this.findConflicts().length === 0;
         },
 
+        showPopup: function (popup) {
+            $(popup).css({
+                top: Math.max(
+                    0, ($(window).height() - $(popup).outerHeight()) / 2 + $(window).scrollTop()) +
+                    "px",
+                left: Math.max(0, ($(window).width() - $(popup).outerWidth()) / 2) + "px"
+
+            }).show();
+        },
+
         showWin: function () {
-            this.$winPopup.show();
+            this.showPopup($winPopup);
         },
 
         solve: function (digitHash) {
