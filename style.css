@@ -39,7 +39,7 @@ h1 {
     padding: 0;
 }
 .uberSudoku .grid .cell input {
-    -moz-appearance:textfield;
+    -moz-appearance: textfield;
     border: none;
     color: #3f78ff;
     font-family: cursive;
