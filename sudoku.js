@@ -260,7 +260,8 @@ $(document).ready(function () {
                         return digit.toString();
                     });
                 });
-                _(digitHash).every(function (digit, cellLabel) {
+                _(ALL_CELL_LABELS).every(function (cellLabel) {
+                    var digit = digitHash[cellLabel];
                     if (isSudokuDigit(digit)) {
                         possibleDigits = assignDigit(possibleDigits, cellLabel, digit);
                     }
