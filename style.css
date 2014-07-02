@@ -21,7 +21,7 @@ h1 {
 }
 h2 {
     font-size: 25px;
-    margin: 0 0 10px;
+    margin: 0 0 6px;
 }
 .uberSudoku .grid {
     background: #ffffff;
@@ -87,7 +87,13 @@ h2 {
     top: 50%;
 }
 .uberSudoku .difficultyPopup button {
-    font-size: 14px;
-    margin: 4px 0;
+    background: #0033aa;
+    border-color: #004cff;
+    border-radius: 8px;
+    color: #dddddd;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    margin: 6px 0;
+    padding: 2px 0;
     width: 100px;
 }
