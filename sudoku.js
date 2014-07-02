@@ -349,7 +349,6 @@ $(document).ready(function () {
                     f4: 1, f8: 3, g3: 1, g8: 6, g9: 8, h3: 8, h4: 5, h8: 1, i2: 9, i7: 4},
                 plugin = $(".sudokuContainer").data("plugin_uberSudoku");
             plugin.populateGrid(harderPuzzleDigitHash);
-            plugin.solve();
             console.log(plugin.solve());
         }
     });
