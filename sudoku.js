@@ -112,7 +112,7 @@ $(document).ready(function () {
                 "</div>"
             );
             this.attachEvents();
-            $(this.element).find(".newGameButton").click();
+            this.restoreGame() || $(this.element).find(".newGameButton").click();
         },
 
         getCell: function (cellLabel) {
@@ -143,6 +143,25 @@ $(document).ready(function () {
             );
         },
 
+        restoreGame: function () {
+            if ("uberSudoku.givenDigitHash" in localStorage) {
+                this.populateGrid(JSON.parse(localStorage["uberSudoku.givenDigitHash"]));
+                if ("uberSudoku.digitHash" in localStorage) {
+                    var digitHash = JSON.parse(localStorage["uberSudoku.digitHash"]);
+                    _(digitHash).each(function (digit, cellLabel) {
+                        var $input = this.getCell(cellLabel).find("input:not([readonly])");
+                        $input.val(digit).trigger("input.other");
+                    }, this);
+                }
+                this.updateConflicts();
+                if (this.isWin()) {
+                    this.showWin();
+                }
+                return true;
+            }
+            return false;
+        },
+
         populateGrid: function (digitHash) {
             _(this.$cells).each(function (cell) {
                 var digit = digitHash[$(cell).attr("data-cell-label")];
@@ -152,6 +171,7 @@ $(document).ready(function () {
                     $(cell).find("input").val("").removeAttr("readonly");
                 }
             });
+            localStorage.setItem("uberSudoku.givenDigitHash", JSON.stringify(digitHash));
         },
 
         generateRandomDigitHash: function (difficulty) {
@@ -237,6 +257,7 @@ $(document).ready(function () {
                 $(this).css("font-size", fontEms + "em");
                 $(this).parent().toggleClass("pencil", $(this).val().length > 1);
                 this.setCustomValidity(" ");    // Disable Firefox's ugly validation
+                localStorage.setItem("uberSudoku.digitHash", JSON.stringify(plugin.getDigitHash()));
             });
 
             $grid.on("mousewheel", ".cell input", function (event) {
@@ -253,6 +274,7 @@ $(document).ready(function () {
 
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
                 plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
+                localStorage.setItem("uberSudoku.digitHash", JSON.stringify(plugin.getDigitHash()));
             });
 
             $(window).resize(function () {
