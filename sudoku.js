@@ -355,7 +355,7 @@ $(document).ready(function () {
         },
 
         showWin: function () {
-            this.showPopup($winPopup);
+            this.showPopup(this.$winPopup);
         },
 
         solve: function (digitHash) {
