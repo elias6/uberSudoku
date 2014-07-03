@@ -174,7 +174,7 @@ $(document).ready(function () {
             return false;
         },
 
-        saveState: function () {
+        saveGame: function () {
             localStorage.setItem("uberSudoku.digitHash", JSON.stringify(this.getDigitHash()));
         },
 
@@ -269,8 +269,8 @@ $(document).ready(function () {
                 }
             });
 
-            $grid.on("input.saveState", ".cell input", function () {
-                plugin.saveState();
+            $grid.on("input.saveGame", ".cell input", function () {
+                plugin.saveGame();
             });
 
             $grid.on("input.other", ".cell input", function () {
@@ -487,7 +487,7 @@ $(document).ready(function () {
                     .val(digit).trigger("input.other");
             }, this);
             plugin.updateConflicts();
-            plugin.saveState();
+            plugin.saveGame();
         },
 
         test: function () {
