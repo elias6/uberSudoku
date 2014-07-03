@@ -281,6 +281,12 @@ $(document).ready(function () {
             $(window).resize(function () {
                 plugin.positionPopup($(plugin.element).find(".popup:visible"));
             });
+
+            $(document).on("keypress", function (event) {
+                if (event.keyCode === 27) {
+                    $(".popup").hide();
+                }
+            });
         },
 
         getValues: function (cells) {
