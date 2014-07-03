@@ -152,10 +152,13 @@ $(document).ready(function () {
                 this.populateGrid(JSON.parse(localStorage["uberSudoku.givenDigitHash"]));
                 if ("uberSudoku.digitHash" in localStorage) {
                     var digitHash = JSON.parse(localStorage["uberSudoku.digitHash"]);
-                    _(digitHash).each(function (digit, cellLabel) {
-                        var $input = this.getCell(cellLabel).find("input:not([readonly])");
-                        $input.val(digit).trigger("input.other");
-                    }, this);
+                    _(this.$cells).each(function (cell) {
+                        var cellLabel = $(cell).attr("data-cell-label");
+                        if (cellLabel in digitHash) {
+                            var $input = $(cell).find("input:not([readonly])");
+                            $input.val(digitHash[cellLabel]).trigger("input.other");
+                        }
+                    });
                 }
                 this.updateConflicts();
                 if (this.isWin()) {
@@ -164,6 +167,10 @@ $(document).ready(function () {
                 return true;
             }
             return false;
+        },
+
+        saveState: function () {
+            localStorage.setItem("uberSudoku.digitHash", JSON.stringify(this.getDigitHash()));
         },
 
         populateGrid: function (digitHash) {
@@ -257,6 +264,10 @@ $(document).ready(function () {
                 }
             });
 
+            $grid.on("input.saveState", ".cell input", function () {
+                plugin.saveState();
+            });
+
             $grid.on("input.other", ".cell input", function () {
                 var fontEms = ([1, 1, 0.9, 0.6, 0.5, 0.4][$(this).val().length] || 0.4);
                 $(this).css({
@@ -264,7 +275,6 @@ $(document).ready(function () {
                     "height": (1.25 / fontEms) + "em",
                     "width": (1.25 / fontEms) + "em"
                 }).toggleClass("pencil", $(this).val().length > 1);
-                localStorage.setItem("uberSudoku.digitHash", JSON.stringify(plugin.getDigitHash()));
             });
 
             $grid.on("mousewheel", ".cell input", function (event) {
@@ -476,6 +486,7 @@ $(document).ready(function () {
                     .val(digit).trigger("input.other");
             }, this);
             plugin.updateConflicts();
+            plugin.saveState();
         },
 
         test: function () {
