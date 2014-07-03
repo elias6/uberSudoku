@@ -116,6 +116,11 @@ $(document).ready(function () {
                 "</div>"
             );
             this.attachEvents();
+
+            this.$rows = _(ROW_CELL_LABEL_HASH).values().map(this.getCells, this);
+            this.$columns = _(COLUMN_CELL_LABEL_HASH).values().map(this.getCells, this);
+            this.$boxes = _(ALL_BOX_CELL_LABELS).map(this.getCells, this);
+
             this.restoreGame() || $(this.element).find(".newGameButton").click();
         },
 
@@ -314,13 +319,9 @@ $(document).ready(function () {
         findConflicts: function () {
             var result = $(),
                 plugin = this,
-                scopes = _.union(
-                    _(ROW_CELL_LABEL_HASH).values(),
-                    _(COLUMN_CELL_LABEL_HASH).values(),
-                    ALL_BOX_CELL_LABELS);
-            scopes.forEach(function (scope) {
-                var $scopeCells = plugin.getCells(scope),
-                    scopeDigits = plugin.getValues($scopeCells).filter(isSudokuDigit),
+                $scopes = _.union(this.$rows, this.$columns, this.$boxes);
+            $scopes.forEach(function ($scopeCells) {
+                var scopeDigits = plugin.getValues($scopeCells).filter(isSudokuDigit),
                     counter = _(scopeDigits).countBy(),
                     duplicateDigits = Object.keys(counter).filter(function (digit) {
                         return counter[digit] > 1;
