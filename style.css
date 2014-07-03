@@ -108,8 +108,8 @@ h2 {
     color: #dddddd;
     font-family: Helvetica, Arial, sans-serif;
     font-size: 0.55em;
-    margin: 0.25em 0;
-    padding: 0.11em;
+    margin: 0.3em 0;
+    padding: 0.25em;
 }
 .uberSudoku .difficultyPopup {
     width: 8.5em;
