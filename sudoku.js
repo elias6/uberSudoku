@@ -259,8 +259,11 @@ $(document).ready(function () {
 
             $grid.on("input.other", ".cell input", function () {
                 var fontEms = ([1, 1, 0.9, 0.6, 0.5, 0.4][$(this).val().length] || 0.4);
-                $(this).css("font-size", fontEms + "em");
-                $(this).parent().toggleClass("pencil", $(this).val().length > 1);
+                $(this).css({
+                    "font-size": fontEms + "em",
+                    "height": (1.25 / fontEms) + "em",
+                    "width": (1.25 / fontEms) + "em"
+                }).toggleClass("pencil", $(this).val().length > 1);
                 localStorage.setItem("uberSudoku.digitHash", JSON.stringify(plugin.getDigitHash()));
             });
 

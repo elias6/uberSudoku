@@ -85,8 +85,9 @@ h2 {
 .uberSudoku .grid .cell.conflict input {
     background: #ffaa88;
 }
-.uberSudoku .grid .cell.pencil input {
-    background: #dddddd;
+.uberSudoku .grid .cell input.pencil {
+    color: #666666;
+    font-weight: normal;
 }
 .uberSudoku .popup {
     background: #ffffcc;
