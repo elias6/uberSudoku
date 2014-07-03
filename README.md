@@ -11,5 +11,4 @@ Here is what I would have done if I had enough time:
 * Offered hints to the user.
 
 
-The background is from http://subtlepatterns.com/handmade-paper/. I got the idea of using an algorithmic solver to generate a puzzle from http://zhangroup.aporc.org/images/files/Paper_3485.pdf. I got the ideas for the solver itself from http://norvig.com/sudoku.html.
-
+The background is from http://subtlepatterns.com/handmade-paper/. I got the idea of using an algorithmic solver to generate a puzzle from http://zhangroup.aporc.org/images/files/Paper_3485.pdf. I got the ideas for the solver itself from http://norvig.com/sudoku.html. I got the handwriting font from http://fonts.simplythebest.net/fonts/Kids_Scrawl.html.

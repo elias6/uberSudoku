@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Kids Scrawl";
+    src: url("Kids_Scrawl.ttf");
+}
+
 @media screen and (-webkit-min-device-pixel-ratio: 2),
 screen and (max--moz-device-pixel-ratio: 2) {
     body {
@@ -45,8 +50,8 @@ h2 {
 .uberSudoku .grid .cell input {
     -moz-appearance: textfield;
     border: none;
-    color: #3f78ff;
-    font-family: cursive;
+    color: #2000dd;
+    font-family: "Kids Scrawl";
     font-size: 26px;
     font-weight: bold;
     height: 32px;
