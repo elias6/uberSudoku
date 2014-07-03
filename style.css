@@ -85,9 +85,6 @@ h2 {
 .uberSudoku .grid .cell.pencil input {
     background: #dddddd;
 }
-.uberSudoku .grid .cell input:-moz-ui-invalid {
-    box-shadow: none;
-}
 .uberSudoku .popup {
     background: #ffffcc;
     border-radius: 0.4em;
