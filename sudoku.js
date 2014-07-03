@@ -5,6 +5,10 @@ $(document).ready(function () {
 });
 
 (function ($, undefined) {
+    if (! ("_" in window)) {
+        throw "Underscore.js must be loaded for this plugin to work"
+    }
+
     function Plugin(element) {
         this.element = element;
         this.init();
