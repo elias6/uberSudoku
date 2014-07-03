@@ -10,6 +10,21 @@ screen and (max--moz-device-pixel-ratio: 2) {
         background-size: 100px 100px;
     }
 }
+@media screen and (max-width: 320px) {
+    body {
+        font-size: 24px;
+    }
+}
+@media screen and (min-width: 321px) and (max-width: 767px) {
+    body {
+        font-size: 30px;
+    }
+}
+@media screen and (min-width: 768px) {
+    body {
+        font-size: 36px;
+    }
+}
 body {
     font-family: Helvetica, Arial, sans-serif;
     background-image: url("handmadepaper.png");
@@ -18,33 +33,33 @@ body {
 h1 {
     background: #ffffcc;
     background: linear-gradient(to bottom, rgba(255, 255, 204, 1), rgba(255, 255, 204, 0));
-    font-size: 32px;
-    margin: 0 0 -45px;
-    padding: 5px 0 50px;
+    font-size: 1.25em;
+    margin: 0 0 -1.8em;
+    padding: 0.2em 0 1.9em;
     text-align: center;
-    text-shadow: rgba(0, 0, 0, 0.5) 2px 2px 5px;
+    text-shadow: rgba(0, 0, 0, 0.5) 0.1em 0.1em 0.2em;
 }
 h2 {
-    font-size: 25px;
-    margin: 0 0 6px;
+    font-size: 0.9em;
+    margin: 0 0 0.23em;
 }
 .uberSudoku .grid {
     background: #ffffff;
-    border: solid 5px #444444;
+    border: solid 0.2em #444444;
     border-collapse: collapse;
-    box-shadow: rgba(0, 0, 0, 0.5) 2px 2px 5px;
+    box-shadow: rgba(0, 0, 0, 0.5) 0.1em 0.1em 0.2em;
     margin: 0 auto;
     text-align: center;
 }
 .uberSudoku .grid tr:nth-of-type(3n) .cell {
-    border-bottom: solid 2px #888888;
+    border-bottom: solid 0.1em #888888;
 }
 .uberSudoku .grid tr .cell:nth-of-type(3n) {
-    border-right: solid 2px #888888;
+    border-right: solid 0.1em #888888;
 }
 .uberSudoku .grid .cell {
-    border: solid 1px #cccccc;
-    font-size: 26px;
+    border: solid 0.05em #cccccc;
+    font-size: 1em;
     padding: 0;
 }
 .uberSudoku .grid .cell input {
@@ -52,12 +67,12 @@ h2 {
     border: none;
     color: #2000dd;
     font-family: "Kids Scrawl";
-    font-size: 26px;
+    font-size: 1em;
     font-weight: bold;
-    height: 32px;
+    height: 1.25em;
     padding: 0;
     text-align: center;
-    width: 32px;
+    width: 1.25em;
 }
 .uberSudoku .grid .cell input::-webkit-outer-spin-button,
 .uberSudoku .grid .cell input::-webkit-inner-spin-button {
@@ -80,13 +95,13 @@ h2 {
 }
 .uberSudoku .popup {
     background: #ffffcc;
-    border-radius: 10px;
-    border: solid 1px #aaaaaa;
-    box-shadow: rgba(0, 0, 0, 0.5) 4px 4px 10px;
+    border-radius: 0.4em;
+    border: solid 0.04em #aaaaaa;
+    box-shadow: rgba(0, 0, 0, 0.5) 0.15em 0.15em 0.4em;
     display: none;
-    font-size: 20px;
+    font-size: 0.75em;
     left: 50%;
-    padding: 5px;
+    padding: 0.2em;
     position: fixed;
     text-align: center;
     top: 50%;
@@ -94,29 +109,29 @@ h2 {
 .uberSudoku button {
     background: #0033aa;
     border-color: #004cff;
-    border-radius: 8px;
+    border-radius: 0.3em;
     color: #dddddd;
     font-family: Helvetica, Arial, sans-serif;
-    font-size: 14px;
-    margin: 7px 0;
-    padding: 3px;
+    font-size: 0.55em;
+    margin: 0.25em 0;
+    padding: 0.11em;
 }
 .uberSudoku .difficultyPopup {
-    width: 225px;
+    width: 8.5em;
 }
 .uberSudoku .difficultyPopup button {
-    font-size: 16px;
-    width: 100px;
+    font-size: 0.6em;
+    width: 6em;
 }
 .uberSudoku .difficultyPopup .xContainer {
     text-align: right;
-    margin: 0 0 -25px;
+    margin: 0 0 -1em;
 }
 .uberSudoku .difficultyPopup .xContainer .closeButton {
     width: auto;
-    font-size: 12px;
+    font-size: 0.45em;
 }
 .uberSudoku .newGameContainer {
-    margin: 0 50px 0 0;
+    margin: 0 1.9em 0 0;
     text-align: right;
 }
