@@ -64,6 +64,7 @@ h2 {
 }
 .uberSudoku .grid .cell input {
     -moz-appearance: textfield;
+    background: transparent;
     border: none;
     color: #2000dd;
     font-family: "Kids Scrawl";
