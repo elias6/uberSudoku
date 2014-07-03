@@ -74,6 +74,9 @@ h2 {
     text-align: center;
     width: 1.25em;
 }
+.uberSudoku .grid .cell input:focus {
+    outline: -webkit-focus-ring-color auto 5px;
+}
 .uberSudoku .grid .cell input[readonly] {
     color: #000000;
     font-family: Helvetica, Arial, sans-serif;
