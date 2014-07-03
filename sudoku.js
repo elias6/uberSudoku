@@ -72,7 +72,7 @@ $(document).ready(function () {
                                         "data-row-label='<%- rowLabel %>' " +
                                         "data-column-label='<%- columnLabel %>' " +
                                         "data-cell-label='<%- rowLabel %><%- columnLabel %>'>" +
-                                            "<input type='number' min='1' max='9' step='1' />" +
+                                            "<input type='tel' maxlength='5' />" +
                                     "</td>" +
                                 "<% }); %>" +
                             "</tr>" +
@@ -215,7 +215,7 @@ $(document).ready(function () {
             var plugin = this,
                 $grid = plugin.$grid;
 
-            $grid.on("keypress keydown", ".cell input", function (event) {
+            $grid.on("keydown", ".cell input", function (event) {
                 if (event.keyCode >= 37 && event.keyCode <= 40) {
                     var $cell = $(this).closest(".cell"),
                         $row = $(this).closest("tr"),
@@ -223,14 +223,16 @@ $(document).ready(function () {
                         $targetCell = $(),
                         value = $(this).val();
                     if (event.keyCode === 37) {  // left
-                        if (_(value).isEmpty() || $(this).is("[readonly]")) {
+                        var cursorIsAtStart = this.selectionEnd === 0;
+                        if (_(value).isEmpty() || cursorIsAtStart || $(this).is("[readonly]")) {
                             $targetCell = $cell.prev();
                         }
                     } else if (event.keyCode === 38) {  // up
                         $targetCell = $row.prev()
                             .find(".cell[data-column-label=" + columnLabel + "]");
                     } else if (event.keyCode === 39) {  // right
-                        if (_(value).isEmpty() || $(this).is("[readonly]")) {
+                        var cursorIsAtEnd = this.selectionStart === value.length;
+                        if (_(value).isEmpty() || cursorIsAtEnd || $(this).is("[readonly]")) {
                             $targetCell = $cell.next();
                         }
                     } else if (event.keyCode === 40) {  // down
@@ -238,7 +240,6 @@ $(document).ready(function () {
                             .find(".cell[data-column-label=" + columnLabel + "]");
                     }
                     $targetCell.find("input").focus().select();
-                    event.preventDefault();
                 }
             });
 
