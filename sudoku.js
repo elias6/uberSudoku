@@ -257,7 +257,6 @@ $(document).ready(function () {
                 var fontEms = ([1, 1, 0.9, 0.6, 0.5, 0.4][$(this).val().length] || 0.4);
                 $(this).css("font-size", fontEms + "em");
                 $(this).parent().toggleClass("pencil", $(this).val().length > 1);
-                this.setCustomValidity(" ");    // Disable Firefox's ugly validation
                 localStorage.setItem("uberSudoku.digitHash", JSON.stringify(plugin.getDigitHash()));
             });
 

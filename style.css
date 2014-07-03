@@ -74,11 +74,6 @@ h2 {
     text-align: center;
     width: 1.25em;
 }
-.uberSudoku .grid .cell input::-webkit-outer-spin-button,
-.uberSudoku .grid .cell input::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
 .uberSudoku .grid .cell input[readonly] {
     color: #000000;
     font-family: Helvetica, Arial, sans-serif;
