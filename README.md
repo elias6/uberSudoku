@@ -1,7 +1,11 @@
 Uber Sudoku
 ===========
 
-This is my Sudoku game for the Uber programming challenge. I am using jQuery and Underscore.
+This is my Sudoku game for the Uber programming challenge.
+
+To play the game, go here: https://mikez302.github.io/uberSudoku/
+
+I am using jQuery and Underscore.
 
 Here is what I would have done if I had enough time:
 * Improved the algorithms used to generate the random puzzles. I could have made them faster and made the difficulty more accurate by implementing all of the ideas in the paper linked below.
