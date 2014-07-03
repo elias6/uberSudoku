@@ -85,7 +85,7 @@ $(document).ready(function () {
             $(this.element).append(this.$grid);
             this.$winPopup = $(
                 "<div class='winPopup popup'>" +
-                    "<p>Congratulations!<p>" +
+                    "<p>Congratulations!</p>" +
                     "<button type='button' class='closeButton'>Close</button>" +
                 "</div>").appendTo(this.element);
             this.$difficultyPopup = $(
