@@ -210,7 +210,7 @@ $(document).ready(function () {
                     break;
                 }                
             }
-            var totalGivenTarget = [50, 42, 33, 29, 24][difficulty - 1],
+            var totalGivenTarget = [50, 36, 32, 28, 22][difficulty - 1],
                 minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1];
             while (_(result).size() > totalGivenTarget) {
                 var cellLabel = _.sample(ALL_CELL_LABELS),
