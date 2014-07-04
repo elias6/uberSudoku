@@ -285,7 +285,6 @@ $(document).ready(function () {
 
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
                 plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
-                localStorage["uberSudoku.digitHash"] = JSON.stringify(plugin.getDigitHash());
             });
 
             $(window).resize(function () {
