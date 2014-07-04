@@ -188,6 +188,7 @@ $(document).ready(function () {
                 }
             });
             localStorage.setItem("uberSudoku.givenDigitHash", JSON.stringify(digitHash));
+            this.updateConflicts();
         },
 
         generateRandomDigitHash: function (difficulty) {
