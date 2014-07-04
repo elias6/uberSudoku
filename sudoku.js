@@ -61,25 +61,23 @@ $(document).ready(function () {
         init: function () {
             $(this.element).empty().addClass("uberSudoku");
 
-            this.$grid = $(
-                _.template(
-                    "<table class='grid'>" +
-                        "<% ALL_ROW_LABELS.forEach(function (rowLabel) { %>" +
-                            "<tr>" +
-                                "<% ALL_COLUMN_LABELS.forEach(function (columnLabel) { %>" +
-                                    "<td " +
-                                        "class='cell' " +
-                                        "data-row-label='<%- rowLabel %>' " +
-                                        "data-column-label='<%- columnLabel %>' " +
-                                        "data-cell-label='<%- rowLabel %><%- columnLabel %>'>" +
-                                            "<input type='tel' maxlength='5' />" +
-                                    "</td>" +
-                                "<% }); %>" +
-                            "</tr>" +
-                        "<% }); %>" +
-                    "</table>",
-                    {ALL_ROW_LABELS: ALL_ROW_LABELS, ALL_COLUMN_LABELS: ALL_COLUMN_LABELS}
-            ));
+            this.$grid = $("<table class='grid' />");
+
+            this.cellHash = {};
+
+            ALL_ROW_LABELS.forEach(function (rowLabel) {
+                var $row = $("<tr />").appendTo(this.$grid);
+                ALL_COLUMN_LABELS.forEach(function (columnLabel) {
+                    var $cell = $("<td />", {
+                            "class": "cell",
+                            "data-row-label": rowLabel,
+                            "data-column-label": columnLabel,
+                            "data-cell-label": rowLabel + columnLabel});
+                    $cell.append("<input type='tel' maxlength='5' />");
+                    this.cellHash[rowLabel + columnLabel] = $cell[0];
+                    $row.append($cell);
+                }, this);
+            }, this);
 
             this.$cells = this.$grid.find(".cell");
             $(this.element).append(this.$grid);
@@ -121,15 +119,13 @@ $(document).ready(function () {
         },
 
         getCell: function (cellLabel) {
-            return $(_(this.$cells).find(function (cell) {
-                return $(cell).attr("data-cell-label") === cellLabel;
-            }));
+            return $(this.cellHash[cellLabel]);
         },
 
         getCells: function (cellLabels) {
-            return this.$cells.filter(function (i, cell) {
-                return _(cellLabels).contains($(cell).attr("data-cell-label"));
-            });
+            return $(cellLabels.map(function (cellLabel) {
+                return this.cellHash[cellLabel];
+            }, this));
         },
 
         getGivenDigitHash: function () {
