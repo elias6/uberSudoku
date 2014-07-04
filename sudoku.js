@@ -149,7 +149,6 @@ $(document).ready(function () {
                 var givenDigitHash = JSON.parse(localStorage["uberSudoku.givenDigitHash"]),
                     userDigitHash = JSON.parse(localStorage["uberSudoku.digitHash"]);
                 this.populateGrid(givenDigitHash, userDigitHash);
-                this.updateConflicts();
                 if (this.isWin()) {
                     this.showWin();
                 }
