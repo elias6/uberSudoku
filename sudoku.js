@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 (function ($, undefined) {
     if (! ("_" in window)) {
-        throw "Underscore.js must be loaded for this plugin to work"
+        throw "Underscore.js must be loaded for this plugin to work";
     }
 
     function Plugin(element) {
