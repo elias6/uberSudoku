@@ -175,7 +175,7 @@ $(document).ready(function () {
         },
 
         saveGame: function () {
-            localStorage.setItem("uberSudoku.digitHash", JSON.stringify(this.getDigitHash()));
+            localStorage["uberSudoku.digitHash"] = JSON.stringify(this.getDigitHash());
         },
 
         populateGrid: function (digitHash) {
@@ -187,7 +187,8 @@ $(document).ready(function () {
                     $(cell).find("input").val("").removeAttr("readonly");
                 }
             });
-            localStorage.setItem("uberSudoku.givenDigitHash", JSON.stringify(digitHash));
+            this.updateConflicts();
+            this.saveGame();
         },
 
         generateRandomDigitHash: function (difficulty) {
@@ -210,7 +211,7 @@ $(document).ready(function () {
                     break;
                 }                
             }
-            var totalGivenTarget = [50, 42, 33, 29, 24][difficulty - 1],
+            var totalGivenTarget = [50, 36, 32, 28, 22][difficulty - 1],
                 minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1];
             while (_(result).size() > totalGivenTarget) {
                 var cellLabel = _.sample(ALL_CELL_LABELS),
@@ -296,7 +297,7 @@ $(document).ready(function () {
 
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
                 plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
-                localStorage.setItem("uberSudoku.digitHash", JSON.stringify(plugin.getDigitHash()));
+                localStorage["uberSudoku.digitHash"] = JSON.stringify(plugin.getDigitHash());
             });
 
             $(window).resize(function () {
@@ -486,8 +487,8 @@ $(document).ready(function () {
                 this.getCell(cellLabel).find("input:not([readonly])")
                     .val(digit).trigger("input.other");
             }, this);
-            plugin.updateConflicts();
-            plugin.saveGame();
+            this.updateConflicts();
+            this.saveGame();
         },
 
         test: function () {
