@@ -59,10 +59,6 @@ $(document).ready(function () {
 
     $.extend(Plugin.prototype, {
         init: function () {
-            this.initGame();
-        },
-
-        initGame: function () {
             $(this.element).empty().addClass("uberSudoku");
 
             this.$grid = $(
