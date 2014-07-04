@@ -486,8 +486,8 @@ $(document).ready(function () {
                 this.getCell(cellLabel).find("input:not([readonly])")
                     .val(digit).trigger("input.other");
             }, this);
-            plugin.updateConflicts();
-            plugin.saveGame();
+            this.updateConflicts();
+            this.saveGame();
         },
 
         test: function () {
