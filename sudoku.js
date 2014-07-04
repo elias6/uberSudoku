@@ -418,7 +418,8 @@ $(document).ready(function () {
                     COLUMN_CELL_LABEL_HASH[columnLabel],
                     BOX_CELL_LABEL_HASH[cellLabel]].every(function (scopeLabels) {
                     var possibleCellLabels = scopeLabels.filter(function (otherCellLabel) {
-                        return _(possibleDigits[otherCellLabel]).contains(digit);
+                        // Don't use _.contains for performance reasons
+                        return possibleDigits[otherCellLabel].indexOf(digit) !== -1;
                     });
                     if (_(possibleCellLabels).isEmpty()) {
                         possibleDigits = false;
