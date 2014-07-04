@@ -146,17 +146,9 @@ $(document).ready(function () {
 
         restoreGame: function () {
             if ("uberSudoku.givenDigitHash" in localStorage) {
-                this.populateGrid(JSON.parse(localStorage["uberSudoku.givenDigitHash"]));
-                if ("uberSudoku.digitHash" in localStorage) {
-                    var digitHash = JSON.parse(localStorage["uberSudoku.digitHash"]);
-                    _(this.$cells).each(function (cell) {
-                        var cellLabel = $(cell).attr("data-cell-label");
-                        if (cellLabel in digitHash) {
-                            var $input = $(cell).find("input:not([readonly])");
-                            $input.val(digitHash[cellLabel]).trigger("input.other");
-                        }
-                    });
-                }
+                var givenDigitHash = JSON.parse(localStorage["uberSudoku.givenDigitHash"]),
+                    userDigitHash = JSON.parse(localStorage["uberSudoku.digitHash"]);
+                this.populateGrid(givenDigitHash, userDigitHash);
                 this.updateConflicts();
                 if (this.isWin()) {
                     this.showWin();
@@ -170,17 +162,21 @@ $(document).ready(function () {
             localStorage["uberSudoku.digitHash"] = JSON.stringify(this.getDigitHash());
         },
 
-        populateGrid: function (digitHash) {
+        populateGrid: function (givenDigitHash, userDigitHash) {
+            userDigitHash = userDigitHash || {};
             _(this.$cells).each(function (cell) {
-                var digit = digitHash[$(cell).attr("data-cell-label")];
-                if (isSudokuDigit(digit)) {
-                    $(cell).find("input").val(digit).attr("readonly", true);
+                var cellLabel = $(cell).attr("data-cell-label"),
+                    givenDigit = givenDigitHash[cellLabel],
+                    userDigit = userDigitHash[cellLabel] || "";
+                if (isSudokuDigit(givenDigit)) {
+                    $(cell).find("input").val(givenDigit).attr("readonly", true);
                 } else {
-                    $(cell).find("input").val("").removeAttr("readonly");
+                    $(cell).find("input").val(userDigit).removeAttr("readonly")
+                        .trigger("input.other");
                 }
             });
             this.updateConflicts();
-            localStorage["uberSudoku.givenDigitHash"] = JSON.stringify(digitHash);
+            localStorage["uberSudoku.givenDigitHash"] = JSON.stringify(givenDigitHash);
             this.saveGame();
         },
 
