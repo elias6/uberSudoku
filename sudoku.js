@@ -175,7 +175,7 @@ $(document).ready(function () {
         },
 
         saveGame: function () {
-            localStorage.setItem("uberSudoku.digitHash", JSON.stringify(this.getDigitHash()));
+            localStorage["uberSudoku.digitHash"] = JSON.stringify(this.getDigitHash());
         },
 
         populateGrid: function (digitHash) {
@@ -187,8 +187,8 @@ $(document).ready(function () {
                     $(cell).find("input").val("").removeAttr("readonly");
                 }
             });
-            localStorage.setItem("uberSudoku.givenDigitHash", JSON.stringify(digitHash));
             this.updateConflicts();
+            this.saveGame();
         },
 
         generateRandomDigitHash: function (difficulty) {
@@ -297,7 +297,7 @@ $(document).ready(function () {
 
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
                 plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
-                localStorage.setItem("uberSudoku.digitHash", JSON.stringify(plugin.getDigitHash()));
+                localStorage["uberSudoku.digitHash"] = JSON.stringify(plugin.getDigitHash());
             });
 
             $(window).resize(function () {
