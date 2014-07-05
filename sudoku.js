@@ -113,7 +113,7 @@ $(document).ready(function () {
 
             this.rows = _(ROW_CELL_LABEL_HASH).values().map(this.getCells, this);
             this.columns = _(COLUMN_CELL_LABEL_HASH).values().map(this.getCells, this);
-            this.boxes = _(ALL_BOX_CELL_LABELS).map(this.getCells, this);
+            this.boxes = ALL_BOX_CELL_LABELS.map(this.getCells, this);
 
             this.restoreGame() || $(this.element).find(".newGameButton").click();
         },
@@ -371,7 +371,7 @@ $(document).ready(function () {
                         return digit.toString();
                     });
                 });
-                _(ALL_CELL_LABELS).every(function (cellLabel) {
+                ALL_CELL_LABELS.every(function (cellLabel) {
                     var digit = digitHash[cellLabel];
                     if (isSudokuDigit(digit)) {
                         possibleDigits = assignDigit(possibleDigits, cellLabel, digit);
