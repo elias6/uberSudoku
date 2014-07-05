@@ -185,7 +185,7 @@ $(document).ready(function () {
                 difficulty = 2;
             }
             var result;
-            while (true) {
+            while (! result) {
                 result = {};
                 _(11).times(function () {
                     var digit = _.random(1, 9).toString(),
@@ -195,9 +195,6 @@ $(document).ready(function () {
                     }
                 }, this);
                 result = this.solve(result);
-                if (result) {
-                    break;
-                }                
             }
             var totalGivenTarget = [50, 36, 32, 28, 22][difficulty - 1],
                 minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1];
