@@ -289,7 +289,7 @@ $(document).ready(function () {
             });
 
             $(document).on("keypress", function (event) {
-                if (event.keyCode === 27) {
+                if (event.keyCode === 27) {    // escape
                     $(".popup").hide();
                 }
             });
