@@ -291,12 +291,6 @@ $(document).ready(function () {
             });
         },
 
-        getValues: function (cells) {
-            return _(cells).map(function (cell) {
-                return $(cell).find("input").val();
-            });
-        },
-
         findConflictCells: function (digitHash) {
             if (_(digitHash).isUndefined()) {
                 digitHash = this.getDigitHash();
@@ -347,7 +341,7 @@ $(document).ready(function () {
         },
 
         isWin: function () {
-            return _(this.getValues(this.$cells)).all(isSudokuDigit) &&
+            return  _(_(this.getDigitHash()).values()).all(isSudokuDigit) &&
                 this.findConflicts().length === 0;
         },
 
