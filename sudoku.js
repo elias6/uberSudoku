@@ -302,9 +302,7 @@ $(document).ready(function () {
                     _(COLUMN_CELL_LABEL_HASH).values(),
                     ALL_BOX_CELL_LABELS);
             scopes.forEach(function (scopeCellLabels) {
-                var scopeDigits = _(digitHash).filter(function (digit, cellLabel) {
-                        return _(scopeCellLabels).contains(cellLabel) && isSudokuDigit(digit);
-                    }),
+                var scopeDigits = _(_(digitHash).pick(scopeCellLabels)).filter(isSudokuDigit),
                     counter = _(scopeDigits).countBy(),
                     duplicateDigits = Object.keys(counter).filter(function (digit) {
                         return counter[digit] > 1;
