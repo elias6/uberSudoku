@@ -312,7 +312,7 @@ $(document).ready(function () {
         },
 
         findConflicts: function () {
-            return this.getCells(this.getGrid().findConflictCells());
+            return this.getCells(this.getGrid().findConflicts());
         },
 
         moveIsValid: function (cellLabel, digit, digitHash) {
@@ -492,7 +492,7 @@ $(document).ready(function () {
             return _.defaults(this.givenDigits, this.userDigits, emptyGridHash);
         },
 
-        findConflictCells: function () {
+        findConflicts: function () {
             var result = [],
                 scopes = _.union(
                     _(ROW_CELL_LABEL_HASH).values(),
