@@ -123,14 +123,6 @@ $(document).ready(function () {
             return $(_(_(this.cellHash).pick(cellLabels)).values());
         },
 
-        getDigitHash: function () {
-            return _.object(
-                _(this.$cells).map(function (cell) {
-                    return [$(cell).attr("data-cell-label"), $(cell).find("input").val()];
-                })
-            );
-        },
-
         getGrid: function () {
             var result = new Grid();
             _(this.$cells).each(function (cell) {
