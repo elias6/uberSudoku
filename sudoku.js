@@ -326,7 +326,8 @@ $(document).ready(function () {
             if (digit === "") {
                 return true;
             } else if (isSudokuDigit(digit)) {
-                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
+                var peerLabels = _(PEER_CELL_LABEL_HASH[cellLabel]).without(cellLabel);
+                return _(peerLabels).all(function (otherCellLabel) {
                     return +digitHash[otherCellLabel] !== +digit;
                 });
             } else {
