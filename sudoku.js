@@ -316,18 +316,13 @@ $(document).ready(function () {
         },
 
         moveIsValid: function (cellLabel, digit, digitHash) {
-            if (_(digitHash).isUndefined()) {
-                digitHash = this.getDigitHash();
+            if (digitHash) {
+                // Temporary hack to keep method working with digitHash
+                var tempGrid = new Grid(digitHash);
+                return tempGrid.moveIsValid(cellLabel, digit);
             }
-            if (digit === "") {
-                return true;
-            } else if (isSudokuDigit(digit)) {
-                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
-                    return +digitHash[otherCellLabel] !== +digit;
-                });
-            } else {
-                return false;
-            }
+
+            return this.getGrid().moveIsValid(cellLabel, digit);
         },
 
         updateConflicts: function () {
@@ -510,6 +505,19 @@ $(document).ready(function () {
                 }));
             });
             return _(result).uniq();
+        },
+
+        moveIsValid: function (cellLabel, digit) {
+            var allDigits = this.getAllDigits();
+            if (digit === "") {
+                return true;
+            } else if (isSudokuDigit(digit)) {
+                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
+                    return +allDigits[otherCellLabel] !== +digit;
+                });
+            } else {
+                return false;
+            }
         }
     });
 
