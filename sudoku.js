@@ -487,6 +487,21 @@ $(document).ready(function () {
         }
     });
 
+    function Grid(givenDigits, userDigits) {
+        this.givenDigits = givenDigits || {};
+        this.userDigits = userDigits || {};
+    }
+
+    $.extend(Grid.prototype, {
+        getAllDigits: function () {
+            var emptyGridHash = {};
+            _(ALL_CELL_LABELS).each(function (cellLabel) {
+                emptyGridHash[cellLabel] = "";
+            });
+            return _.defaults(this.givenDigits, this.userDigits, emptyGridHash);
+        }
+    });
+
     $.fn.uberSudoku = function (options) {
         return this.each(function () {
             if (! $(this).data("plugin_uberSudoku")) {
