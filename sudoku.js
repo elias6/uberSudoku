@@ -51,6 +51,7 @@ $(document).ready(function () {
                     ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
                     COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
                     BOX_CELL_LABEL_HASH[cellLabel]);
+            peerLabels = _(peerLabels).without(cellLabel);
             return [cellLabel, peerLabels.sort()];
         })),
         isSudokuDigit = function (digit) {
@@ -326,8 +327,7 @@ $(document).ready(function () {
             if (digit === "") {
                 return true;
             } else if (isSudokuDigit(digit)) {
-                var peerLabels = _(PEER_CELL_LABEL_HASH[cellLabel]).without(cellLabel);
-                return _(peerLabels).all(function (otherCellLabel) {
+                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
                     return +digitHash[otherCellLabel] !== +digit;
                 });
             } else {
@@ -400,7 +400,7 @@ $(document).ready(function () {
                 if (_(possibleDigits[cellLabel]).isEmpty()) {
                     return false;    // Puzzle is unsolvable
                 } else if (possibleDigits[cellLabel].length === 1) {
-                    var peerLabels = _(PEER_CELL_LABEL_HASH[cellLabel]).without(cellLabel);
+                    var peerLabels = _(PEER_CELL_LABEL_HASH[cellLabel]);
                     peerLabels.every(function (peerLabel) {
                         possibleDigits = eliminateDigit(possibleDigits, peerLabel,
                             possibleDigits[cellLabel][0]);
