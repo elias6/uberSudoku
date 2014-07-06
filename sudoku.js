@@ -340,7 +340,14 @@ $(document).ready(function () {
 
     function Grid(givenDigits, userDigits) {
         this.givenDigits = givenDigits || {};
-        this.userDigits = userDigits || {};
+        if (userDigits) {
+            var givenDigitCells = Object.keys(givenDigits).filter(function (cellLabel) {
+                return isSudokuDigit(givenDigits[cellLabel]);
+            });
+            this.userDigits = _(userDigits).omit(givenDigitCells);
+        } else {
+            this.userDigits = {};
+        }
     }
 
     $.extend(Grid.prototype, {
