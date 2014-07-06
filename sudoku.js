@@ -337,8 +337,11 @@ $(document).ready(function () {
             this.$cells.not($conflicts).removeClass("conflict");
         },
 
-        isWin: function () {
-            return  _(_(this.getDigitHash()).values()).all(isSudokuDigit) &&
+        isWin: function (digitHash) {
+            if (_(digitHash).isUndefined()) {
+                digitHash = this.getDigitHash();
+            }
+            return  _(_(digitHash).values()).all(isSudokuDigit) &&
                 this.findConflictCells().length === 0;
         },
 
