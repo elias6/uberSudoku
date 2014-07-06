@@ -111,10 +111,6 @@ $(document).ready(function () {
             );
             this.attachEvents();
 
-            this.rows = _(ROW_CELL_LABEL_HASH).values().map(this.getCells, this);
-            this.columns = _(COLUMN_CELL_LABEL_HASH).values().map(this.getCells, this);
-            this.boxes = ALL_BOX_CELL_LABELS.map(this.getCells, this);
-
             this.restoreGame() || $(this.element).find(".newGameButton").click();
         },
 
@@ -301,21 +297,32 @@ $(document).ready(function () {
             });
         },
 
-        findConflicts: function () {
-            var result = $(),
-                plugin = this,
-                $scopes = _.union(this.rows, this.columns, this.boxes);
-            $scopes.forEach(function ($scopeCells) {
-                var scopeDigits = plugin.getValues($scopeCells).filter(isSudokuDigit),
+        findConflictCells: function (digitHash) {
+            if (_(digitHash).isUndefined()) {
+                digitHash = this.getDigitHash();
+            }
+            var result = [],
+                scopes = _.union(
+                    _(ROW_CELL_LABEL_HASH).values(),
+                    _(COLUMN_CELL_LABEL_HASH).values(),
+                    ALL_BOX_CELL_LABELS);
+            scopes.forEach(function (scopeCellLabels) {
+                var scopeDigits = _(digitHash).filter(function (digit, cellLabel) {
+                        return _(scopeCellLabels).contains(cellLabel) && isSudokuDigit(digit);
+                    }),
                     counter = _(scopeDigits).countBy(),
                     duplicateDigits = Object.keys(counter).filter(function (digit) {
                         return counter[digit] > 1;
                     });
-                result = result.add($scopeCells.filter(function (i, cell) {
-                    return _(duplicateDigits).contains($(cell).find("input").val());
+                result = result.concat(scopeCellLabels.filter(function (cellLabel) {
+                    return _(duplicateDigits).contains(digitHash[cellLabel]);
                 }));
             });
-            return result;
+            return _(result).uniq();
+        },
+
+        findConflicts: function () {
+            return this.getCells(this.findConflictCells());
         },
 
         moveIsValid: function (cellLabel, digit, digitHash) {
