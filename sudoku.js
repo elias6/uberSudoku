@@ -482,25 +482,6 @@ $(document).ready(function () {
             }, this);
             this.updateConflicts();
             this.saveGame();
-        },
-
-        test: function () {
-            var easyPuzzleDigitHash = {
-                    a3: 3, a5: 2, a7: 6, b1: 9, b4: 3, b6: 5, b9: 1, c3: 1, c4: 8, c6: 6, c7: 4,
-                    d3: 8, d4: 1, d6: 2, d7: 9, e1: 7, e9: 8, f3: 6, f4: 7, f6: 8, f7: 2, g3: 2,
-                    g4: 6, g6: 9, g7: 5, h1: 8, h4: 2, h6: 3, h9: 9, i3: 5, i5: 1, i7: 3 },
-                hardPuzzleDigitHash = {
-                    a8: 1, a9: 2, b5: 3, b6: 5, c4: 6, c8: 7, d1: 7, d7: 3, e4: 4, e7: 8, f1: 1,
-                    g4: 1, g5: 2, h2: 8, h8: 4, i2: 5, i7: 6},
-                harderPuzzleDigitHash = {
-                    a1: 4, a7: 8, a9: 5, b2: 3, c4: 7, d2: 2, d8: 6, e5: 8, e7: 4, f5: 1, g4: 6,
-                    g6: 3, g8: 7, h1: 5, h4: 2, i1: 1, i3: 4},
-                worldsHardestPuzzleDigitHash = {
-                    a1: 8, b3: 3, b4: 6, c2: 7, c5: 9, c7: 2, d2: 5, d6: 7, e5: 4, e6: 5, e7: 7,
-                    f4: 1, f8: 3, g3: 1, g8: 6, g9: 8, h3: 8, h4: 5, h8: 1, i2: 9, i7: 4},
-                plugin = $(".sudokuContainer").data("plugin_uberSudoku");
-            plugin.populateGrid(harderPuzzleDigitHash);
-            plugin.applySolution(plugin.solve());
         }
     });
 
