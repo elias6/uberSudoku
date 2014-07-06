@@ -311,26 +311,8 @@ $(document).ready(function () {
             });
         },
 
-        findConflictCells: function (digitHash) {
-            if (_(digitHash).isUndefined()) {
-                digitHash = this.getDigitHash();
-            }
-            var result = [],
-                scopes = _.union(
-                    _(ROW_CELL_LABEL_HASH).values(),
-                    _(COLUMN_CELL_LABEL_HASH).values(),
-                    ALL_BOX_CELL_LABELS);
-            scopes.forEach(function (scopeCellLabels) {
-                var scopeDigits = _(_(digitHash).pick(scopeCellLabels)).filter(isSudokuDigit),
-                    counter = _(scopeDigits).countBy(),
-                    duplicateDigits = Object.keys(counter).filter(function (digit) {
-                        return counter[digit] > 1;
-                    });
-                result = result.concat(scopeCellLabels.filter(function (cellLabel) {
-                    return _(duplicateDigits).contains(digitHash[cellLabel]);
-                }));
-            });
-            return _(result).uniq();
+        findConflictCells: function () {
+            return this.getGrid().findConflictCells();
         },
 
         findConflicts: function () {
@@ -512,6 +494,26 @@ $(document).ready(function () {
                 emptyGridHash[cellLabel] = "";
             });
             return _.defaults(this.givenDigits, this.userDigits, emptyGridHash);
+        },
+
+        findConflictCells: function () {
+            var result = [],
+                scopes = _.union(
+                    _(ROW_CELL_LABEL_HASH).values(),
+                    _(COLUMN_CELL_LABEL_HASH).values(),
+                    ALL_BOX_CELL_LABELS),
+                allDigits = this.getAllDigits();
+            scopes.forEach(function (scopeCellLabels) {
+                var scopeDigits = _(_(allDigits).pick(scopeCellLabels)).filter(isSudokuDigit),
+                    counter = _(scopeDigits).countBy(),
+                    duplicateDigits = Object.keys(counter).filter(function (digit) {
+                        return counter[digit] > 1;
+                    });
+                result = result.concat(scopeCellLabels.filter(function (cellLabel) {
+                    return _(duplicateDigits).contains(allDigits[cellLabel]);
+                }));
+            });
+            return _(result).uniq();
         }
     });
 
