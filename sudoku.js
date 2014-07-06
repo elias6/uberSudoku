@@ -120,9 +120,7 @@ $(document).ready(function () {
         },
 
         getCells: function (cellLabels) {
-            return $(cellLabels.map(function (cellLabel) {
-                return this.cellHash[cellLabel];
-            }, this));
+            return $(_(_(this.cellHash).pick(cellLabels)).values());
         },
 
         getGivenDigitHash: function () {
