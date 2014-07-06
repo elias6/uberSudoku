@@ -145,28 +145,26 @@ $(document).ready(function () {
         },
 
         restoreGame: function () {
-            if ("uberSudoku.givenDigitHash" in localStorage) {
-                var givenDigitHash = JSON.parse(localStorage["uberSudoku.givenDigitHash"]),
-                    userDigitHash = JSON.parse(localStorage["uberSudoku.digitHash"]);
-                this.populateGrid(givenDigitHash, userDigitHash);
+            if ("uberSudoku" in localStorage) {
+                var gridData = JSON.parse(localStorage.uberSudoku),
+                    grid = new Grid(gridData.givenDigits, gridData.userDigits);
+                this.populateGrid(grid);
                 if (this.isWin()) {
                     this.showWin();
                 }
                 return true;
             }
-            return false;
         },
 
         saveGame: function () {
-            localStorage["uberSudoku.digitHash"] = JSON.stringify(this.getDigitHash());
+            localStorage["uberSudoku"] = JSON.stringify(this.getGrid());
         },
 
-        populateGrid: function (givenDigitHash, userDigitHash) {
-            userDigitHash = userDigitHash || {};
+        populateGrid: function (grid) {
             _(this.$cells).each(function (cell) {
                 var cellLabel = $(cell).attr("data-cell-label"),
-                    givenDigit = givenDigitHash[cellLabel],
-                    userDigit = userDigitHash[cellLabel] || "";
+                    givenDigit = grid.givenDigits[cellLabel],
+                    userDigit = grid.userDigits[cellLabel] || "";
                 if (isSudokuDigit(givenDigit)) {
                     $(cell).find("input").val(givenDigit).attr("readonly", true);
                 } else {
@@ -175,42 +173,41 @@ $(document).ready(function () {
                 }
             });
             this.updateConflicts();
-            localStorage["uberSudoku.givenDigitHash"] = JSON.stringify(givenDigitHash);
             this.saveGame();
         },
 
-        generateRandomDigitHash: function (difficulty) {
+        generateRandomGrid: function (difficulty) {
             // Difficulty should be an integer from 1 to 5 inclusively.
             if (_(difficulty).isUndefined()) {
                 difficulty = 2;
             }
-            var result;
-            while (! result) {
-                result = {};
+            var givenDigits;
+            while (! givenDigits) {
+                givenDigits = {};
                 _(11).times(function () {
                     var digit = _.random(1, 9).toString(),
                         cellLabel = _.sample(ALL_CELL_LABELS);
-                    if (! (cellLabel in result) && this.moveIsValid(cellLabel, digit, result)) {
-                        result[cellLabel] = digit;
+                    if (! (cellLabel in givenDigits) && this.moveIsValid(cellLabel, digit, givenDigits)) {
+                        givenDigits[cellLabel] = digit;
                     }
                 }, this);
-                result = this.solve(result);
+                givenDigits = this.solve(givenDigits);
             }
             var totalGivenTarget = [50, 36, 32, 28, 22][difficulty - 1],
                 minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1];
-            while (_(result).size() > totalGivenTarget) {
+            while (_(givenDigits).size() > totalGivenTarget) {
                 var cellLabel = _.sample(ALL_CELL_LABELS),
                     row = ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
                     column = COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
-                    rowGivenCount = _(row).intersection(Object.keys(result)).length,
-                    columnGivenCount = _(column).intersection(Object.keys(result)).length,
+                    rowGivenCount = _(row).intersection(Object.keys(givenDigits)).length,
+                    columnGivenCount = _(column).intersection(Object.keys(givenDigits)).length,
                     okToDeleteCell = rowGivenCount >= minGivensPerRowOrColumn &&
                         columnGivenCount >= minGivensPerRowOrColumn;
                 if (okToDeleteCell) {
-                    delete result[cellLabel];
+                    delete givenDigits[cellLabel];
                 }                    
             }
-            return result;
+            return new Grid(givenDigits);
         },
 
         attachEvents: function () {
@@ -281,7 +278,7 @@ $(document).ready(function () {
             });
 
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
-                plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
+                plugin.populateGrid(plugin.generateRandomGrid($(this).data("difficulty")));
             });
 
             $(window).resize(function () {
