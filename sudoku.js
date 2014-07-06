@@ -147,6 +147,19 @@ $(document).ready(function () {
             );
         },
 
+        getGrid: function () {
+            var result = new Grid();
+            _(this.$cells).each(function (cell) {
+                var $input = $(cell).find("input");
+                if ($input.is("[readonly]")) {
+                    result.givenDigits[$(cell).attr("data-cell-label")] = $input.val();
+                } else {
+                    result.userDigits[$(cell).attr("data-cell-label")] = $input.val();
+                }
+            });
+            return result;
+        },
+
         restoreGame: function () {
             if ("uberSudoku.givenDigitHash" in localStorage) {
                 var givenDigitHash = JSON.parse(localStorage["uberSudoku.givenDigitHash"]),
