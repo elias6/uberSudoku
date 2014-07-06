@@ -351,8 +351,75 @@ $(document).ready(function () {
             this.showPopup(this.$winPopup);
         },
 
-        solve: function (digitHash) {
-            function findPossibleDigits(digitHash) {
+        solve: function () {
+            return this.getGrid().solve();
+        },
+
+        applySolution: function (solution) {
+            _(solution).each(function (digit, cellLabel) {
+                this.getCell(cellLabel).find("input:not([readonly])")
+                    .val(digit).trigger("input.other");
+            }, this);
+            this.updateConflicts();
+            this.saveGame();
+        }
+    });
+
+    function Grid(givenDigits, userDigits) {
+        this.givenDigits = givenDigits || {};
+        this.userDigits = userDigits || {};
+    }
+
+    $.extend(Grid.prototype, {
+        getAllDigits: function () {
+            var emptyGridHash = {};
+            _(ALL_CELL_LABELS).each(function (cellLabel) {
+                emptyGridHash[cellLabel] = "";
+            });
+            return _.defaults(this.givenDigits, this.userDigits, emptyGridHash);
+        },
+
+        findConflicts: function () {
+            var result = [],
+                scopes = _.union(
+                    _(ROW_CELL_LABEL_HASH).values(),
+                    _(COLUMN_CELL_LABEL_HASH).values(),
+                    ALL_BOX_CELL_LABELS),
+                allDigits = this.getAllDigits();
+            scopes.forEach(function (scopeCellLabels) {
+                var scopeDigits = _(_(allDigits).pick(scopeCellLabels)).filter(isSudokuDigit),
+                    counter = _(scopeDigits).countBy(),
+                    duplicateDigits = Object.keys(counter).filter(function (digit) {
+                        return counter[digit] > 1;
+                    });
+                result = result.concat(scopeCellLabels.filter(function (cellLabel) {
+                    return _(duplicateDigits).contains(allDigits[cellLabel]);
+                }));
+            });
+            return _(result).uniq();
+        },
+
+        moveIsValid: function (cellLabel, digit) {
+            var allDigits = this.getAllDigits();
+            if (digit === "") {
+                return true;
+            } else if (isSudokuDigit(digit)) {
+                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
+                    return +allDigits[otherCellLabel] !== +digit;
+                });
+            } else {
+                return false;
+            }
+        },
+
+        isWin: function () {
+            var allDigits = this.getAllDigits();
+            return  _(_(allDigits).values()).all(isSudokuDigit) &&
+                this.findConflicts().length === 0;
+        },
+
+        solve: function () {
+            function findPossibleDigits(allDigits) {
                 var possibleDigits = {};
                 ALL_CELL_LABELS.forEach(function (cellLabel) {
                     possibleDigits[cellLabel] = _.range(1, 10).map(function (digit) {
@@ -360,7 +427,7 @@ $(document).ready(function () {
                     });
                 });
                 ALL_CELL_LABELS.every(function (cellLabel) {
-                    var digit = digitHash[cellLabel];
+                    var digit = allDigits[cellLabel];
                     if (isSudokuDigit(digit)) {
                         possibleDigits = assignDigit(possibleDigits, cellLabel, digit);
                     }
@@ -447,79 +514,13 @@ $(document).ready(function () {
                 return solution;
             }
 
-            if (_(digitHash).isUndefined()) {
-                digitHash = this.getGivenDigitHash();
-            }
-            var result = search(findPossibleDigits(digitHash));
+            var result = search(findPossibleDigits(this.getAllDigits()));
             if (_(result).isObject()) {
                 _(result).each(function (digits, cellLabel) {
                     result[cellLabel] = digits[0];
                 });
             }
             return result;
-        },
-
-        applySolution: function (solution) {
-            _(solution).each(function (digit, cellLabel) {
-                this.getCell(cellLabel).find("input:not([readonly])")
-                    .val(digit).trigger("input.other");
-            }, this);
-            this.updateConflicts();
-            this.saveGame();
-        }
-    });
-
-    function Grid(givenDigits, userDigits) {
-        this.givenDigits = givenDigits || {};
-        this.userDigits = userDigits || {};
-    }
-
-    $.extend(Grid.prototype, {
-        getAllDigits: function () {
-            var emptyGridHash = {};
-            _(ALL_CELL_LABELS).each(function (cellLabel) {
-                emptyGridHash[cellLabel] = "";
-            });
-            return _.defaults(this.givenDigits, this.userDigits, emptyGridHash);
-        },
-
-        findConflicts: function () {
-            var result = [],
-                scopes = _.union(
-                    _(ROW_CELL_LABEL_HASH).values(),
-                    _(COLUMN_CELL_LABEL_HASH).values(),
-                    ALL_BOX_CELL_LABELS),
-                allDigits = this.getAllDigits();
-            scopes.forEach(function (scopeCellLabels) {
-                var scopeDigits = _(_(allDigits).pick(scopeCellLabels)).filter(isSudokuDigit),
-                    counter = _(scopeDigits).countBy(),
-                    duplicateDigits = Object.keys(counter).filter(function (digit) {
-                        return counter[digit] > 1;
-                    });
-                result = result.concat(scopeCellLabels.filter(function (cellLabel) {
-                    return _(duplicateDigits).contains(allDigits[cellLabel]);
-                }));
-            });
-            return _(result).uniq();
-        },
-
-        moveIsValid: function (cellLabel, digit) {
-            var allDigits = this.getAllDigits();
-            if (digit === "") {
-                return true;
-            } else if (isSudokuDigit(digit)) {
-                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
-                    return +allDigits[otherCellLabel] !== +digit;
-                });
-            } else {
-                return false;
-            }
-        },
-
-        isWin: function () {
-            var allDigits = this.getAllDigits();
-            return  _(_(allDigits).values()).all(isSudokuDigit) &&
-                this.findConflicts().length === 0;
         }
     });
 
