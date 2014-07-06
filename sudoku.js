@@ -339,7 +339,7 @@ $(document).ready(function () {
 
         isWin: function () {
             return  _(_(this.getDigitHash()).values()).all(isSudokuDigit) &&
-                this.findConflicts().length === 0;
+                this.findConflictCells().length === 0;
         },
 
         showPopup: function (popup) {
