@@ -131,6 +131,14 @@ $(document).ready(function () {
             );
         },
 
+        getUserDigitHash: function () {
+            return _.object(
+                _(this.$cells.not(":has(input[readonly])")).map(function (cell) {
+                    return [$(cell).attr("data-cell-label"), $(cell).find("input").val()];
+                })
+            );
+        },
+
         getDigitHash: function () {
             return _.object(
                 _(this.$cells).map(function (cell) {
