@@ -311,12 +311,8 @@ $(document).ready(function () {
             });
         },
 
-        findConflictCells: function () {
-            return this.getGrid().findConflictCells();
-        },
-
         findConflicts: function () {
-            return this.getCells(this.findConflictCells());
+            return this.getCells(this.getGrid().findConflictCells());
         },
 
         moveIsValid: function (cellLabel, digit, digitHash) {
@@ -345,7 +341,7 @@ $(document).ready(function () {
                 digitHash = this.getDigitHash();
             }
             return  _(_(digitHash).values()).all(isSudokuDigit) &&
-                this.findConflictCells().length === 0;
+                this.findConflicts().length === 0;
         },
 
         showPopup: function (popup) {
