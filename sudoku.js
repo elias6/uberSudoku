@@ -332,11 +332,7 @@ $(document).ready(function () {
         },
 
         isWin: function (digitHash) {
-            if (_(digitHash).isUndefined()) {
-                digitHash = this.getDigitHash();
-            }
-            return  _(_(digitHash).values()).all(isSudokuDigit) &&
-                this.findConflicts().length === 0;
+            return this.getGrid().isWin();
         },
 
         showPopup: function (popup) {
@@ -518,6 +514,12 @@ $(document).ready(function () {
             } else {
                 return false;
             }
+        },
+
+        isWin: function () {
+            var allDigits = this.getAllDigits();
+            return  _(_(allDigits).values()).all(isSudokuDigit) &&
+                this.findConflicts().length === 0;
         }
     });
 
