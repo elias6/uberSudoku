@@ -173,20 +173,22 @@ $(document).ready(function () {
             if (_(difficulty).isUndefined()) {
                 difficulty = 2;
             }
-            var givenDigits;
-            while (! givenDigits) {
+            var givenDigits,
+                solution = false;
+            while (! solution) {
                 givenDigits = {};
                 _(11).times(function () {
                     var digit = _.random(1, 9).toString(),
                         cellLabel = _.sample(ALL_CELL_LABELS);
-                    if (! (cellLabel in givenDigits) && this.moveIsValid(cellLabel, digit, givenDigits)) {
+                    if (! (givenDigits.cellLabel) && this.moveIsValid(cellLabel, digit, givenDigits)) {
                         givenDigits[cellLabel] = digit;
                     }
                 }, this);
-                givenDigits = this.solve(givenDigits);
+                solution = this.solve(new Grid(givenDigits));
             }
             var totalGivenTarget = [50, 36, 32, 28, 22][difficulty - 1],
-                minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1];
+                minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1],
+                givenDigits = solution.getAllDigits();
             while (_(givenDigits).size() > totalGivenTarget) {
                 var cellLabel = _.sample(ALL_CELL_LABELS),
                     row = ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
