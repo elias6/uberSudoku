@@ -343,11 +343,11 @@ $(document).ready(function () {
 
     $.extend(Grid.prototype, {
         getAllDigits: function () {
-            var emptyGridHash = {};
+            var result = {};
             _(ALL_CELL_LABELS).each(function (cellLabel) {
-                emptyGridHash[cellLabel] = "";
-            });
-            return _.defaults(this.givenDigits, this.userDigits, emptyGridHash);
+                result[cellLabel] = this.givenDigits[cellLabel] || this.userDigits[cellLabel] || "";
+            }, this);
+            return result;
         },
 
         getFilledDigitCount: function () {
