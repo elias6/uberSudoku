@@ -326,15 +326,6 @@ $(document).ready(function () {
 
         solve: function () {
             return this.getGrid().solve();
-        },
-
-        applySolution: function (solution) {
-            _(solution).each(function (digit, cellLabel) {
-                this.getCell(cellLabel).find("input:not([readonly])")
-                    .val(digit).trigger("input.other");
-            }, this);
-            this.updateConflicts();
-            this.saveGame();
         }
     });
 
