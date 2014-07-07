@@ -173,15 +173,15 @@ $(document).ready(function () {
             if (_(difficulty).isUndefined()) {
                 difficulty = 2;
             }
-            var givenDigits,
+            var tempGrid = new Grid(),
                 solution = false;
             while (! solution) {
-                givenDigits = {};
+                tempGrid.givenDigits = {};
                 _(11).times(function () {
                     var digit = _.random(1, 9).toString(),
                         cellLabel = _.sample(ALL_CELL_LABELS);
-                    if (! (givenDigits.cellLabel) && this.moveIsValid(cellLabel, digit, givenDigits)) {
-                        givenDigits[cellLabel] = digit;
+                    if (! tempGrid.givenDigits.cellLabel && tempGrid.moveIsValid(cellLabel, digit)) {
+                        tempGrid.givenDigits[cellLabel] = digit;
                     }
                 }, this);
                 solution = this.solve(new Grid(givenDigits));
