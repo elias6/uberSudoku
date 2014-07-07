@@ -290,13 +290,7 @@ $(document).ready(function () {
             return this.getCells(this.getGrid().findConflicts());
         },
 
-        moveIsValid: function (cellLabel, digit, digitHash) {
-            if (digitHash) {
-                // Temporary hack to keep method working with digitHash
-                var tempGrid = new Grid(digitHash);
-                return tempGrid.moveIsValid(cellLabel, digit);
-            }
-
+        moveIsValid: function (cellLabel, digit) {
             return this.getGrid().moveIsValid(cellLabel, digit);
         },
 
