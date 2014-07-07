@@ -300,7 +300,7 @@ $(document).ready(function () {
             this.$cells.not($conflicts).removeClass("conflict");
         },
 
-        isWin: function (digitHash) {
+        isWin: function () {
             return this.getGrid().isWin();
         },
 
