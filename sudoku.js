@@ -504,6 +504,8 @@ $(document).ready(function () {
         }
     });
 
+    window.Grid = Grid;
+
     $.fn.uberSudoku = function (options) {
         return this.each(function () {
             if (! $(this).data("plugin_uberSudoku")) {
