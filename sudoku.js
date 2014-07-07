@@ -494,13 +494,15 @@ $(document).ready(function () {
                 return solution;
             }
 
-            var result = search(findPossibleDigits(this.getAllDigits()));
-            if (_(result).isObject()) {
-                _(result).each(function (digits, cellLabel) {
-                    result[cellLabel] = digits[0];
+            var solution = search(findPossibleDigits(this.getAllDigits())),
+                userDigits = {};
+            if (_(solution).isObject()) {
+                _(solution).each(function (digits, cellLabel) {
+                    userDigits[cellLabel] = digits[0];
                 });
+                return new Grid(this.givenDigits, userDigits);
             }
-            return result;
+            return false;
         }
     });
 
