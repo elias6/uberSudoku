@@ -350,6 +350,12 @@ $(document).ready(function () {
             return _.defaults(this.givenDigits, this.userDigits, emptyGridHash);
         },
 
+        getFilledDigitCount: function () {
+            return _(this.getAllDigits()).filter(function (digit, cellLabel) {
+                return digit.length > 0;
+            }).length;
+        },
+
         findConflicts: function () {
             var result = [],
                 scopes = _.union(
