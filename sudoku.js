@@ -290,10 +290,6 @@ $(document).ready(function () {
             return this.getCells(this.getGrid().findConflicts());
         },
 
-        moveIsValid: function (cellLabel, digit) {
-            return this.getGrid().moveIsValid(cellLabel, digit);
-        },
-
         updateConflicts: function () {
             var $conflicts = this.findConflicts();
             $conflicts.addClass("conflict");
