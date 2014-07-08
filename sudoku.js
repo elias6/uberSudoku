@@ -315,10 +315,6 @@ $(document).ready(function () {
 
         showWin: function () {
             this.showPopup(this.$winPopup);
-        },
-
-        solve: function () {
-            return this.getGrid().solve();
         }
     });
 
