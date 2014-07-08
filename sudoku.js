@@ -181,7 +181,7 @@ $(document).ready(function () {
                 _(11).times(function () {
                     var digit = _.random(1, 9).toString(),
                         cellLabel = _.sample(ALL_CELL_LABELS);
-                    if (! tempGrid.givenDigits.cellLabel && tempGrid.moveIsValid(cellLabel, digit)) {
+                    if (! tempGrid.givenDigits[cellLabel] && tempGrid.moveIsValid(cellLabel, digit)) {
                         tempGrid.givenDigits[cellLabel] = digit;
                     }
                 }, this);
