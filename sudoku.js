@@ -356,12 +356,9 @@ $(document).ready(function () {
                 allDigits = this.getAllDigits();
             scopes.forEach(function (scopeCellLabels) {
                 var scopeDigits = _(_(allDigits).pick(scopeCellLabels)).filter(isSudokuDigit),
-                    counter = _(scopeDigits).countBy(),
-                    duplicateDigits = Object.keys(counter).filter(function (digit) {
-                        return counter[digit] > 1;
-                    });
+                    counter = _(scopeDigits).countBy();
                 result = result.concat(scopeCellLabels.filter(function (cellLabel) {
-                    return _(duplicateDigits).contains(allDigits[cellLabel]);
+                    return counter[allDigits[cellLabel]] > 1;
                 }));
             });
             return _(result).uniq();
