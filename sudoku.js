@@ -387,9 +387,7 @@ $(document).ready(function () {
             function findPossibleDigits(allDigits) {
                 var possibleDigits = {};
                 ALL_CELL_LABELS.forEach(function (cellLabel) {
-                    possibleDigits[cellLabel] = _.range(1, 10).map(function (digit) {
-                        return digit.toString();
-                    });
+                    possibleDigits[cellLabel] = _(_.range(1, 10)).invoke("toString");
                 });
                 ALL_CELL_LABELS.every(function (cellLabel) {
                     var digit = allDigits[cellLabel];
