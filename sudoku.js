@@ -344,9 +344,7 @@ $(document).ready(function () {
         },
 
         getFilledDigitCount: function () {
-            return _(this.getAllDigits()).filter(function (digit, cellLabel) {
-                return digit.length > 0;
-            }).length;
+            return _(this.getAllDigits()).compact().length;
         },
 
         findConflicts: function () {
