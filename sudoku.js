@@ -185,7 +185,7 @@ $(document).ready(function () {
                         tempGrid.givenDigits[cellLabel] = digit;
                     }
                 }, this);
-                solution = this.solve(new Grid(givenDigits));
+                solution = tempGrid.solve();
             }
             var totalGivenTarget = [50, 36, 32, 28, 22][difficulty - 1],
                 minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1],
