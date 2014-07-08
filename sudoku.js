@@ -146,6 +146,7 @@ $(document).ready(function () {
                 }
                 return true;
             }
+            return false;
         },
 
         saveGame: function () {
