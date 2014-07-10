@@ -6,7 +6,7 @@ $(document).ready(function () {
 
 (function ($, undefined) {
     if (! ("_" in window)) {
-        throw "Underscore.js must be loaded for this plugin to work"
+        throw "Underscore.js must be loaded for this plugin to work";
     }
 
     function Plugin(element) {
@@ -51,6 +51,7 @@ $(document).ready(function () {
                     ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
                     COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
                     BOX_CELL_LABEL_HASH[cellLabel]);
+            peerLabels = _(peerLabels).without(cellLabel);
             return [cellLabel, peerLabels.sort()];
         })),
         isSudokuDigit = function (digit) {
@@ -59,31 +60,25 @@ $(document).ready(function () {
 
     $.extend(Plugin.prototype, {
         init: function () {
-            this.initGame();
-        },
-
-        initGame: function () {
             $(this.element).empty().addClass("uberSudoku");
 
-            this.$grid = $(
-                _.template(
-                    "<table class='grid'>" +
-                        "<% ALL_ROW_LABELS.forEach(function (rowLabel) { %>" +
-                            "<tr>" +
-                                "<% ALL_COLUMN_LABELS.forEach(function (columnLabel) { %>" +
-                                    "<td " +
-                                        "class='cell' " +
-                                        "data-row-label='<%- rowLabel %>' " +
-                                        "data-column-label='<%- columnLabel %>' " +
-                                        "data-cell-label='<%- rowLabel %><%- columnLabel %>'>" +
-                                            "<input type='tel' maxlength='5' />" +
-                                    "</td>" +
-                                "<% }); %>" +
-                            "</tr>" +
-                        "<% }); %>" +
-                    "</table>",
-                    {ALL_ROW_LABELS: ALL_ROW_LABELS, ALL_COLUMN_LABELS: ALL_COLUMN_LABELS}
-            ));
+            this.$grid = $("<table class='grid' />");
+
+            this.cellHash = {};
+
+            ALL_ROW_LABELS.forEach(function (rowLabel) {
+                var $row = $("<tr />").appendTo(this.$grid);
+                ALL_COLUMN_LABELS.forEach(function (columnLabel) {
+                    var $cell = $("<td />", {
+                            "class": "cell",
+                            "data-row-label": rowLabel,
+                            "data-column-label": columnLabel,
+                            "data-cell-label": rowLabel + columnLabel});
+                    $cell.append("<input type='tel' maxlength='5' />");
+                    this.cellHash[rowLabel + columnLabel] = $cell[0];
+                    $row.append($cell);
+                }, this);
+            }, this);
 
             this.$cells = this.$grid.find(".cell");
             $(this.element).append(this.$grid);
@@ -117,55 +112,35 @@ $(document).ready(function () {
             );
             this.attachEvents();
 
-            this.$rows = _(ROW_CELL_LABEL_HASH).values().map(this.getCells, this);
-            this.$columns = _(COLUMN_CELL_LABEL_HASH).values().map(this.getCells, this);
-            this.$boxes = _(ALL_BOX_CELL_LABELS).map(this.getCells, this);
-
             this.restoreGame() || $(this.element).find(".newGameButton").click();
         },
 
         getCell: function (cellLabel) {
-            return $(_(this.$cells).find(function (cell) {
-                return $(cell).attr("data-cell-label") === cellLabel;
-            }));
+            return $(this.cellHash[cellLabel]);
         },
 
         getCells: function (cellLabels) {
-            return this.$cells.filter(function (i, cell) {
-                return _(cellLabels).contains($(cell).attr("data-cell-label"));
+            return $(_(_(this.cellHash).pick(cellLabels)).values());
+        },
+
+        getGrid: function () {
+            var result = new Grid();
+            _(this.$cells).each(function (cell) {
+                var $input = $(cell).find("input");
+                if ($input.is("[readonly]")) {
+                    result.givenDigits[$(cell).attr("data-cell-label")] = $input.val();
+                } else {
+                    result.userDigits[$(cell).attr("data-cell-label")] = $input.val();
+                }
             });
-        },
-
-        getGivenDigitHash: function () {
-            return _.object(
-                _(this.$cells.has("input[readonly]")).map(function (cell) {
-                    return [$(cell).attr("data-cell-label"), $(cell).find("input").val()];
-                })
-            );
-        },
-
-        getDigitHash: function () {
-            return _.object(
-                _(this.$cells).map(function (cell) {
-                    return [$(cell).attr("data-cell-label"), $(cell).find("input").val()];
-                })
-            );
+            return result;
         },
 
         restoreGame: function () {
-            if ("uberSudoku.givenDigitHash" in localStorage) {
-                this.populateGrid(JSON.parse(localStorage["uberSudoku.givenDigitHash"]));
-                if ("uberSudoku.digitHash" in localStorage) {
-                    var digitHash = JSON.parse(localStorage["uberSudoku.digitHash"]);
-                    _(this.$cells).each(function (cell) {
-                        var cellLabel = $(cell).attr("data-cell-label");
-                        if (cellLabel in digitHash) {
-                            var $input = $(cell).find("input:not([readonly])");
-                            $input.val(digitHash[cellLabel]).trigger("input.other");
-                        }
-                    });
-                }
-                this.updateConflicts();
+            if ("uberSudoku" in localStorage) {
+                var gridData = JSON.parse(localStorage.uberSudoku),
+                    grid = new Grid(gridData.givenDigits, gridData.userDigits);
+                this.populateGrid(grid);
                 if (this.isWin()) {
                     this.showWin();
                 }
@@ -175,16 +150,19 @@ $(document).ready(function () {
         },
 
         saveGame: function () {
-            localStorage["uberSudoku.digitHash"] = JSON.stringify(this.getDigitHash());
+            localStorage["uberSudoku"] = JSON.stringify(this.getGrid());
         },
 
-        populateGrid: function (digitHash) {
+        populateGrid: function (grid) {
             _(this.$cells).each(function (cell) {
-                var digit = digitHash[$(cell).attr("data-cell-label")];
-                if (isSudokuDigit(digit)) {
-                    $(cell).find("input").val(digit).attr("readonly", true);
+                var cellLabel = $(cell).attr("data-cell-label"),
+                    givenDigit = grid.givenDigits[cellLabel],
+                    userDigit = grid.userDigits[cellLabel] || "";
+                if (isSudokuDigit(givenDigit)) {
+                    $(cell).find("input").val(givenDigit).attr("readonly", true);
                 } else {
-                    $(cell).find("input").val("").removeAttr("readonly");
+                    $(cell).find("input").val(userDigit).removeAttr("readonly")
+                        .trigger("input.other");
                 }
             });
             this.updateConflicts();
@@ -192,41 +170,40 @@ $(document).ready(function () {
             this.saveGame();
         },
 
-        generateRandomDigitHash: function (difficulty) {
+        generateRandomGrid: function (difficulty) {
             // Difficulty should be an integer from 1 to 5 inclusively.
             if (_(difficulty).isUndefined()) {
                 difficulty = 2;
             }
-            var result;
-            while (true) {
-                result = {};
+            var tempGrid = new Grid(),
+                solution = false;
+            while (! solution) {
+                tempGrid.givenDigits = {};
                 _(11).times(function () {
                     var digit = _.random(1, 9).toString(),
                         cellLabel = _.sample(ALL_CELL_LABELS);
-                    if (! (cellLabel in result) && this.moveIsValid(cellLabel, digit, result)) {
-                        result[cellLabel] = digit;
+                    if (! tempGrid.givenDigits[cellLabel] && tempGrid.moveIsValid(cellLabel, digit)) {
+                        tempGrid.givenDigits[cellLabel] = digit;
                     }
                 }, this);
-                result = this.solve(result);
-                if (result) {
-                    break;
-                }                
+                solution = tempGrid.solve();
             }
             var totalGivenTarget = [50, 36, 32, 28, 22][difficulty - 1],
-                minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1];
-            while (_(result).size() > totalGivenTarget) {
+                minGivensPerRowOrColumn = [5, 4, 3, 2, 0][difficulty - 1],
+                givenDigits = solution.getAllDigits();
+            while (_(givenDigits).size() > totalGivenTarget) {
                 var cellLabel = _.sample(ALL_CELL_LABELS),
                     row = ROW_CELL_LABEL_HASH[cellLabel.charAt(0)],
                     column = COLUMN_CELL_LABEL_HASH[cellLabel.charAt(1)],
-                    rowGivenCount = _(row).intersection(Object.keys(result)).length,
-                    columnGivenCount = _(column).intersection(Object.keys(result)).length,
+                    rowGivenCount = _(row).intersection(Object.keys(givenDigits)).length,
+                    columnGivenCount = _(column).intersection(Object.keys(givenDigits)).length,
                     okToDeleteCell = rowGivenCount >= minGivensPerRowOrColumn &&
                         columnGivenCount >= minGivensPerRowOrColumn;
                 if (okToDeleteCell) {
-                    delete result[cellLabel];
+                    delete givenDigits[cellLabel];
                 }                    
             }
-            return result;
+            return new Grid(givenDigits);
         },
 
         attachEvents: function () {
@@ -297,8 +274,7 @@ $(document).ready(function () {
             });
 
             $(this.element).on("click", ".difficultyPopup button[data-difficulty]", function () {
-                plugin.populateGrid(plugin.generateRandomDigitHash($(this).data("difficulty")));
-                localStorage["uberSudoku.digitHash"] = JSON.stringify(plugin.getDigitHash());
+                plugin.populateGrid(plugin.generateRandomGrid($(this).data("difficulty")));
             });
 
             $(window).resize(function () {
@@ -306,48 +282,14 @@ $(document).ready(function () {
             });
 
             $(document).on("keypress", function (event) {
-                if (event.keyCode === 27) {
+                if (event.keyCode === 27) {    // escape
                     $(".popup").hide();
                 }
             });
         },
 
-        getValues: function (cells) {
-            return _(cells).map(function (cell) {
-                return $(cell).find("input").val();
-            });
-        },
-
         findConflicts: function () {
-            var result = $(),
-                plugin = this,
-                $scopes = _.union(this.$rows, this.$columns, this.$boxes);
-            $scopes.forEach(function ($scopeCells) {
-                var scopeDigits = plugin.getValues($scopeCells).filter(isSudokuDigit),
-                    counter = _(scopeDigits).countBy(),
-                    duplicateDigits = Object.keys(counter).filter(function (digit) {
-                        return counter[digit] > 1;
-                    });
-                result = result.add($scopeCells.filter(function (i, cell) {
-                    return _(duplicateDigits).contains($(cell).find("input").val());
-                }));
-            });
-            return result;
-        },
-
-        moveIsValid: function (cellLabel, digit, digitHash) {
-            if (_(digitHash).isUndefined()) {
-                digitHash = this.getDigitHash();
-            }
-            if (digit === "") {
-                return true;
-            } else if (isSudokuDigit(digit)) {
-                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
-                    return +digitHash[otherCellLabel] !== +digit;
-                });
-            } else {
-                return false;
-            }
+            return this.getCells(this.getGrid().findConflicts());
         },
 
         updateConflicts: function () {
@@ -357,8 +299,7 @@ $(document).ready(function () {
         },
 
         isWin: function () {
-            return _(this.getValues(this.$cells)).all(isSudokuDigit) &&
-                this.findConflicts().length === 0;
+            return this.getGrid().isWin();
         },
 
         showPopup: function (popup) {
@@ -375,18 +316,78 @@ $(document).ready(function () {
 
         showWin: function () {
             this.showPopup(this.$winPopup);
+        }
+    });
+
+    function Grid(givenDigits, userDigits) {
+        this.givenDigits = givenDigits || {};
+        if (userDigits) {
+            var givenDigitCells = Object.keys(givenDigits).filter(function (cellLabel) {
+                return isSudokuDigit(givenDigits[cellLabel]);
+            });
+            this.userDigits = _(userDigits).omit(givenDigitCells);
+        } else {
+            this.userDigits = {};
+        }
+    }
+
+    $.extend(Grid.prototype, {
+        getAllDigits: function () {
+            var result = {};
+            _(ALL_CELL_LABELS).each(function (cellLabel) {
+                result[cellLabel] = this.givenDigits[cellLabel] || this.userDigits[cellLabel] || "";
+            }, this);
+            return result;
         },
 
-        solve: function (digitHash) {
-            function findPossibleDigits(digitHash) {
+        getFilledDigitCount: function () {
+            return _(this.getAllDigits()).compact().length;
+        },
+
+        findConflicts: function () {
+            var result = [],
+                scopes = _.union(
+                    _(ROW_CELL_LABEL_HASH).values(),
+                    _(COLUMN_CELL_LABEL_HASH).values(),
+                    ALL_BOX_CELL_LABELS),
+                allDigits = this.getAllDigits();
+            scopes.forEach(function (scopeCellLabels) {
+                var scopeDigits = _(_(allDigits).pick(scopeCellLabels)).filter(isSudokuDigit),
+                    counter = _(scopeDigits).countBy();
+                result = result.concat(scopeCellLabels.filter(function (cellLabel) {
+                    return counter[allDigits[cellLabel]] > 1;
+                }));
+            });
+            return _(result).uniq();
+        },
+
+        moveIsValid: function (cellLabel, digit) {
+            var allDigits = this.getAllDigits();
+            if (digit === "") {
+                return true;
+            } else if (isSudokuDigit(digit)) {
+                return _(PEER_CELL_LABEL_HASH[cellLabel]).all(function (otherCellLabel) {
+                    return +allDigits[otherCellLabel] !== +digit;
+                });
+            } else {
+                return false;
+            }
+        },
+
+        isWin: function () {
+            var allDigits = this.getAllDigits();
+            return  _(_(allDigits).values()).all(isSudokuDigit) &&
+                this.findConflicts().length === 0;
+        },
+
+        solve: function () {
+            function findPossibleDigits(allDigits) {
                 var possibleDigits = {};
                 ALL_CELL_LABELS.forEach(function (cellLabel) {
-                    possibleDigits[cellLabel] = _.range(1, 10).map(function (digit) {
-                        return digit.toString();
-                    });
+                    possibleDigits[cellLabel] = _(_.range(1, 10)).invoke("toString");
                 });
-                _(ALL_CELL_LABELS).every(function (cellLabel) {
-                    var digit = digitHash[cellLabel];
+                ALL_CELL_LABELS.every(function (cellLabel) {
+                    var digit = allDigits[cellLabel];
                     if (isSudokuDigit(digit)) {
                         possibleDigits = assignDigit(possibleDigits, cellLabel, digit);
                     }
@@ -415,7 +416,7 @@ $(document).ready(function () {
                 if (_(possibleDigits[cellLabel]).isEmpty()) {
                     return false;    // Puzzle is unsolvable
                 } else if (possibleDigits[cellLabel].length === 1) {
-                    var peerLabels = _(PEER_CELL_LABEL_HASH[cellLabel]).without(cellLabel);
+                    var peerLabels = _(PEER_CELL_LABEL_HASH[cellLabel]);
                     peerLabels.every(function (peerLabel) {
                         possibleDigits = eliminateDigit(possibleDigits, peerLabel,
                             possibleDigits[cellLabel][0]);
@@ -432,7 +433,8 @@ $(document).ready(function () {
                     COLUMN_CELL_LABEL_HASH[columnLabel],
                     BOX_CELL_LABEL_HASH[cellLabel]].every(function (scopeLabels) {
                     var possibleCellLabels = scopeLabels.filter(function (otherCellLabel) {
-                        return _(possibleDigits[otherCellLabel]).contains(digit);
+                        // Don't use _.contains for performance reasons
+                        return possibleDigits[otherCellLabel].indexOf(digit) !== -1;
                     });
                     if (_(possibleCellLabels).isEmpty()) {
                         possibleDigits = false;
@@ -446,6 +448,7 @@ $(document).ready(function () {
             }
 
             function search(possibleDigits) {
+                // WARNING: this function modifies possibleDigits
                 if (! possibleDigits) {
                     return false;    // Puzzle is unsolvable
                 }
@@ -471,46 +474,19 @@ $(document).ready(function () {
                 return solution;
             }
 
-            if (_(digitHash).isUndefined()) {
-                digitHash = this.getGivenDigitHash();
-            }
-            var result = search(findPossibleDigits(digitHash));
-            if (_(result).isObject()) {
-                _(result).each(function (digits, cellLabel) {
-                    result[cellLabel] = digits[0];
+            var solution = search(findPossibleDigits(this.getAllDigits())),
+                userDigits = {};
+            if (_(solution).isObject()) {
+                _(solution).each(function (digits, cellLabel) {
+                    userDigits[cellLabel] = digits[0];
                 });
+                return new Grid(this.givenDigits, userDigits);
             }
-            return result;
-        },
-
-        applySolution: function (solution) {
-            _(solution).each(function (digit, cellLabel) {
-                this.getCell(cellLabel).find("input:not([readonly])")
-                    .val(digit).trigger("input.other");
-            }, this);
-            this.updateConflicts();
-            this.saveGame();
-        },
-
-        test: function () {
-            var easyPuzzleDigitHash = {
-                    a3: 3, a5: 2, a7: 6, b1: 9, b4: 3, b6: 5, b9: 1, c3: 1, c4: 8, c6: 6, c7: 4,
-                    d3: 8, d4: 1, d6: 2, d7: 9, e1: 7, e9: 8, f3: 6, f4: 7, f6: 8, f7: 2, g3: 2,
-                    g4: 6, g6: 9, g7: 5, h1: 8, h4: 2, h6: 3, h9: 9, i3: 5, i5: 1, i7: 3 },
-                hardPuzzleDigitHash = {
-                    a8: 1, a9: 2, b5: 3, b6: 5, c4: 6, c8: 7, d1: 7, d7: 3, e4: 4, e7: 8, f1: 1,
-                    g4: 1, g5: 2, h2: 8, h8: 4, i2: 5, i7: 6},
-                harderPuzzleDigitHash = {
-                    a1: 4, a7: 8, a9: 5, b2: 3, c4: 7, d2: 2, d8: 6, e5: 8, e7: 4, f5: 1, g4: 6,
-                    g6: 3, g8: 7, h1: 5, h4: 2, i1: 1, i3: 4},
-                worldsHardestPuzzleDigitHash = {
-                    a1: 8, b3: 3, b4: 6, c2: 7, c5: 9, c7: 2, d2: 5, d6: 7, e5: 4, e6: 5, e7: 7,
-                    f4: 1, f8: 3, g3: 1, g8: 6, g9: 8, h3: 8, h4: 5, h8: 1, i2: 9, i7: 4},
-                plugin = $(".sudokuContainer").data("plugin_uberSudoku");
-            plugin.populateGrid(harderPuzzleDigitHash);
-            plugin.applySolution(plugin.solve());
+            return false;
         }
     });
+
+    window.Grid = Grid;
 
     $.fn.uberSudoku = function (options) {
         return this.each(function () {
