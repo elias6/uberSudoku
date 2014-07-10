@@ -166,7 +166,6 @@ $(document).ready(function () {
                 }
             });
             this.updateConflicts();
-            localStorage["uberSudoku.givenDigitHash"] = JSON.stringify(digitHash);
             this.saveGame();
         },
 
